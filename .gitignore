@@ -39,3 +39,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+.vercel
+
+# local tooling / audit
+.claude/
+.vscode/
+disturbia-audit/
+UI_AUDIT_REPORT.md
+scripts/

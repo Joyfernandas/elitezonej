@@ -1,0 +1,1839 @@
+/* =============================================================
+   Disturbia-Inspired Theme — Elite Zone J
+   --------------------------------------------------------------
+   Inspired by the visual restraint of disturbia.co.uk.
+   Not a copy. All assets, content, brand marks, and product
+   imagery remain Elite Zone J's original property. Section names,
+   navigation structure, copy, and product range are entirely
+   different. The shared elements are common e-commerce conventions:
+   white surface, black ink, red sale accent, serif heading + sans
+   body — none of which constitute Disturbia's trade dress.
+
+   Real Disturbia tokens used as reference (extracted from
+   theme.css served at disturbia.co.uk/cdn/shop/t/456):
+     --background: #ffffff
+     --text-color: #1c1b1b
+     --text-color-light: #6a6a6a
+     --border-color: #dddddd
+     --product-sale-price-color: #f94c43
+     --heading-font-family: "Libre Baskerville", serif
+     --text-font-family: Roboto, sans-serif
+   ============================================================= */
+
+:root {
+  /* ---------- Typography ---------- */
+  --font-display: "Libre Baskerville", "Cormorant Garamond", Georgia, serif;
+  --font-body:    "Roboto", -apple-system, "Helvetica Neue", sans-serif;
+
+  /* Type scale — pulled DOWN closer to Disturbia's modest scale.   */
+  /* They run 13/14px base and small headings. We compromise with   */
+  /* slightly bigger display so the editorial feel survives.        */
+  --t-display-xl-size: clamp(34px, 4.5vw, 56px);
+  --t-display-xl-lh:   1.15;
+  --t-display-xl-ls:   -0.01em;
+
+  --t-display-lg-size: clamp(24px, 3vw, 36px);
+  --t-display-lg-lh:   1.2;
+  --t-display-lg-ls:   -0.005em;
+
+  --t-display-md-size: 20px;
+  --t-display-md-lh:   1.3;
+  --t-display-md-ls:   0;
+
+  --t-body-size: 15px;             /* +2px over Disturbia (better readability) */
+  --t-body-lh:   1.65;
+  --t-body-lg-size: 17px;
+  --t-body-lg-lh: 1.7;
+
+  /* ---------- Surfaces (light, like Disturbia) ---------- */
+  --paper:   #ffffff;
+  --paper-2: #fafafa;
+  --paper-3: #dddddd;   /* Disturbia's exact border colour */
+
+  /* ---------- Ink ---------- */
+  --ink:   #1c1b1b;     /* Disturbia's exact text colour */
+  --ink-2: #1c1b1b;     /* body matches heading - their convention */
+  --ink-3: #6a6a6a;     /* Disturbia's exact muted text */
+  --ink-4: #aaaaaa;
+
+  /* ---------- Accent — RESERVED for sale/limited only ---------- */
+  /* Disturbia uses #f94c43 only for sale prices. We follow that. */
+  --accent:    #1c1b1b;     /* default brand accent = ink (monochrome) */
+  --accent-hi: #000000;
+  --sale:      #f94c43;     /* dedicated sale colour */
+
+  /* ---------- Lines ---------- */
+  --rule:        1px solid var(--paper-3);
+  --rule-strong: 1px solid var(--ink);
+  --rule-soft:   1px solid #eeeeee;
+}
+
+::selection { background: var(--ink); color: var(--paper); }
+html { color-scheme: light; }
+
+/* Safety net for horizontal overflow at small viewports */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* =============================================================
+   Smooth-motion layer — coordinates all transitions and animations
+   on a single easing curve so the site reads as one fluid surface
+   instead of a patchwork of differing speeds.
+   ============================================================= */
+:root {
+  --ease-soft:  cubic-bezier(.785, .135, .15, .86);    /* Disturbia's curve */
+  --ease-out:   cubic-bezier(.2, .7, .2, 1);           /* gentle ease-out */
+  --d-quick: 200ms;
+  --d-base:  450ms;
+  --d-slow:  700ms;
+}
+
+/* Smooth scroll for anchor jumps & programmatic scrolling */
+html { scroll-behavior: smooth; }
+
+/* Universal reduced-motion respect — disables every animation/
+   transition for users who've set the OS preference. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Anchor-tag default smooth color transition */
+a { transition: color var(--d-quick) var(--ease-out); }
+
+/* All clickable interactive elements get a smooth color/border base
+   transition unless overridden by a more specific rule */
+button:not(.btn), .icon-btn, .util-link, .cart-trigger,
+.support-links a, .foot-col ul a, .social-icon, .mobile-drawer a {
+  transition: color var(--d-quick) var(--ease-out),
+              background var(--d-quick) var(--ease-out),
+              transform var(--d-quick) var(--ease-out),
+              opacity var(--d-quick) var(--ease-out);
+}
+
+/* =============================================================
+   Mega menu — subtle slide-down on entrance for a coherent feel
+   with the rest of the motion language. Keeps the bridge intact
+   (no Y-offset on initial hover) but adds a faint translateY hint
+   that animates off as the panel becomes visible.
+   ============================================================= */
+.header-nav .mega {
+  transition: opacity var(--d-base) var(--ease-soft) !important;
+}
+
+/* =============================================================
+   Product card image — gentle cross-fade between primary and alt
+   instead of instant swap. Subtle, doesn't feel sluggish.
+   ============================================================= */
+.pcard .plate img.alt,
+.pcard .plate img.primary {
+  transition: opacity var(--d-base) var(--ease-soft) !important;
+}
+
+/* Card plate gets a barely-perceptible lift on hover to signal
+   interactivity. ~2px translate is enough to feel responsive
+   without breaking the "flat catalogue" feel. */
+.pcard {
+  transition: transform var(--d-base) var(--ease-soft);
+}
+.pcard:hover {
+  transform: translateY(-2px);
+}
+
+/* =============================================================
+   Editorial-split + carousel — softer fade-in when these come
+   into view (the existing Reveal component handles intersection).
+   ============================================================= */
+.rev {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity var(--d-slow) var(--ease-out),
+              transform var(--d-slow) var(--ease-out);
+}
+.rev.in {
+  opacity: 1;
+  transform: none;
+}
+
+/* =============================================================
+   Page transitions — subtle fade on initial mount so the homepage
+   doesn't pop into existence at full opacity.
+   ============================================================= */
+@keyframes pageEnter {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+main, body > section, .hero {
+  animation: pageEnter 0.6s var(--ease-out) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  main, body > section, .hero { animation: none; }
+}
+
+/* =============================================================
+   Focus-visible (WCAG 2.4.7) — keyboard users get a clear ring,
+   mouse users do not. Using outline so it works on any element
+   without breaking layout.
+   ============================================================= */
+*:focus { outline: none; }
+*:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+  border-radius: 1px;
+}
+.btn:focus-visible,
+.icon-btn:focus-visible,
+.cart-trigger:focus-visible,
+.util-link:focus-visible,
+.size:focus-visible,
+.mobile-drawer a:focus-visible,
+.cart-drawer a:focus-visible,
+.cart-drawer button:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+/* Buttons-on-dark variants (hero CTA, bespoke teaser, mega menu close) */
+.hero-overlay .btn:focus-visible,
+.bespoke-teaser .btn:focus-visible,
+.promo-modal-close:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 3px;
+}
+
+/* =============================================================
+   Touch targets — guarantee 44×44 px minimum for everything
+   interactive (WCAG SC 2.5.5 AAA, but 44px is industry standard
+   for mobile fingertip targets).
+   ============================================================= */
+.icon-btn,
+.util-link,
+.cart-trigger,
+.promo-sticker-dismiss,
+.hamburger,
+.cart-drawer-head .close,
+.promo-modal-close,
+.size {
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.header-nav .nav-primary > li > a {
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+/* Mega menu sub-links: pad to 44px tall */
+.header-nav .mega ul a { padding: 11px 0 !important; }
+.header-nav .mega .footer a { padding: 14px 0; display: inline-block; min-height: 44px; }
+
+/* Footer columns: pad each link enough to hit 44×44 */
+.foot-col ul a {
+  display: inline-block;
+  padding: 12px 8px;
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Trust strip support row: phone / chat / contact links */
+.support-links a {
+  padding: 12px 8px;
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Social icons in footer */
+.social-icon {
+  padding: 11px;
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+body {
+  font-size: var(--t-body-size);
+  color: var(--ink);
+}
+
+/* EditorialSplit children must not overflow their parent at any viewport.
+   Without this, .ed-split-img (with min-height/aspect-ratio) and
+   .ed-split-grid (3-col wide grid) bust out at <720px viewports. */
+.ed-split, .ed-split-img, .ed-split-grid, .ed-split-overlay {
+  max-width: 100%;
+  min-width: 0;
+}
+.ed-split-grid .pcard { min-width: 0; }
+.ed-split-grid .pcard .plate { width: 100%; }
+
+/* =============================================================
+   Header — two-row: utility row (account/brand/icons), nav row
+   ============================================================= */
+header.site {
+  background: #ffffff !important;
+  border-bottom: 1px solid var(--paper-3) !important;
+  backdrop-filter: none !important;
+  position: sticky; top: 0; z-index: 80;
+  display: block !important;
+}
+
+/* hide legacy single-row layout from page.tsx HOME_CSS */
+.header-row { display: none !important; }
+
+.header-top {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 24px;
+  padding: 18px 48px;          /* aligned with container padding */
+}
+.header-left { display: flex; align-items: center; gap: 32px; }
+.header-right { display: flex; align-items: center; gap: 24px; justify-content: flex-end; }
+
+.brand {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 28px;
+  letter-spacing: 0.04em;
+  text-align: center;
+  color: var(--ink);
+}
+.brand a { color: inherit; }
+
+/* Gothic wordmark — !important on every prop because page.tsx
+   HOME_CSS injects an inline <style> after disturbia.css loads,
+   and at equal specificity source order wins. */
+.brand.brand--gothic {
+  font-family: "Pirata One", "Libre Baskerville", serif !important;
+  font-size: clamp(42px, 4.4vw, 60px) !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.03em !important;
+  line-height: 1 !important;
+}
+@media (max-width: 900px) { .brand.brand--gothic { font-size: 32px !important; } }
+
+/* =============================================================
+   Side-rail rotated promo sticker + dismiss button + modal
+   Generic e-commerce promo decoration. Click sticker → modal opens.
+   Click ✕ → sticker dismissed for the session (localStorage).
+   ============================================================= */
+.promo-sticker-wrap {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 90;
+  display: flex; flex-direction: column; align-items: flex-end; gap: 8px;
+}
+.promo-sticker {
+  background: var(--ink);
+  color: #ffffff;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 12px 28px;
+  cursor: pointer;
+  border: 0;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);    /* makes vertical text read bottom-to-top */
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 90px;
+  transition: background 0.2s ease;
+}
+.promo-sticker:hover { background: #000000; }
+.promo-sticker-dismiss {
+  background: transparent;
+  border: 0;
+  color: var(--ink);
+  cursor: pointer;
+  padding: 4px;
+  display: inline-flex; align-items: center; justify-content: center;
+  margin-right: 8px;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+.promo-sticker-dismiss:hover { opacity: 1; }
+
+@media (max-width: 720px) { .promo-sticker-wrap { display: none; } }
+
+/* Modal overlay (clickable backdrop) */
+.promo-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 250;
+  opacity: 0; pointer-events: none;
+  transition: opacity 350ms cubic-bezier(.645,.045,.355,1);
+}
+.promo-overlay[data-open="true"] { opacity: 1; pointer-events: auto; }
+
+/* Modal — black panel, centred on viewport */
+.promo-modal {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -45%);
+  width: min(480px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
+  background: #0a0a0a;
+  color: #ffffff;
+  z-index: 251;
+  padding: 40px 32px 28px;
+  opacity: 0; pointer-events: none;
+  transition: opacity 350ms cubic-bezier(.645,.045,.355,1),
+              transform 350ms cubic-bezier(.645,.045,.355,1);
+  overflow-y: auto;
+}
+.promo-modal[data-open="true"] {
+  opacity: 1; pointer-events: auto;
+  transform: translate(-50%, -50%);
+}
+.promo-modal-close {
+  position: absolute; top: 16px; right: 16px;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: #ffffff; color: var(--ink);
+  border: 0; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: background 0.2s ease;
+}
+.promo-modal-close:hover { background: #e8e6e3; }
+
+/* Form */
+.promo-form { display: flex; flex-direction: column; gap: 12px; }
+.promo-form h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(28px, 4vw, 38px);
+  line-height: 1.15;
+  text-align: center;
+  margin: 0 0 12px;
+  color: #ffffff;
+}
+.promo-deck {
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: #cccccc;
+  margin: 0 0 24px;
+  line-height: 1.6;
+}
+.promo-form input,
+.promo-form select {
+  width: 100%;
+  background: #ffffff;
+  color: var(--ink);
+  border: 0;
+  padding: 16px 20px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  border-radius: 0;
+}
+.promo-form input::placeholder { color: #999; }
+.promo-form select { color: #999; appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'><path d='M3 4l3 3 3-3' fill='none' stroke='%23999' stroke-width='1.5'/></svg>");
+  background-repeat: no-repeat; background-position: right 18px center;
+}
+.promo-form select:valid { color: var(--ink); }
+.promo-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.promo-submit {
+  margin-top: 8px;
+  background: #c8c6c2;
+  color: var(--ink);
+  border: 0;
+  padding: 18px;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.promo-submit:hover { background: #ffffff; }
+.promo-fineprint {
+  margin: 16px 0 0;
+  font-family: var(--font-body);
+  font-size: 11px;
+  line-height: 1.5;
+  color: #999;
+  text-align: center;
+}
+
+.promo-thanks { text-align: center; padding: 32px 0; }
+.promo-thanks h2 {
+  font-family: var(--font-display); font-weight: 400;
+  font-size: 36px; margin: 0 0 16px; color: #ffffff;
+}
+.promo-thanks p { color: #cccccc; font-size: 14px; margin: 0; }
+
+@media (max-width: 720px) {
+  .promo-modal { padding: 48px 24px 24px; }
+  .promo-row { grid-template-columns: 1fr; }
+}
+
+.util-link {
+  background: transparent; border: 0; cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 14px;                   /* +1px over Disturbia */
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink);
+  padding: 0;
+  display: inline-flex; align-items: center; gap: 12px;
+  text-decoration: none;
+}
+/* Account link gets the underline (active-link convention) */
+.util-account .util-text {
+  text-decoration: underline;
+  text-underline-offset: 6px;
+  text-decoration-thickness: 1px;
+}
+.util-account:hover .util-text { color: var(--ink-3); }
+.util-currency {
+  color: var(--ink);
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  font-size: 12px;
+}
+.util-currency:hover { color: var(--ink-3); }
+
+.icon-btn {
+  background: transparent; border: 0; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 12px;
+  color: var(--ink); padding: 0;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  transition: color 0.2s ease;
+  text-decoration: none;
+}
+.icon-btn:hover { color: var(--ink-3); }
+.icon-label { display: inline; }
+@media (max-width: 720px) { .icon-label { display: none; } }
+
+/* Cart trigger uses the same SVG icon; nudge sizing to match */
+.cart-trigger {
+  display: inline-flex; align-items: center; gap: 6px;
+  color: var(--ink);
+}
+.cart-trigger:hover { color: var(--ink-3); }
+.bag-count {
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  font-weight: 500;
+}
+
+.header-nav {
+  display: flex;
+  justify-content: center;
+  border-top: 1px solid var(--paper-3);
+  padding: 16px 48px;          /* aligned with container padding */
+}
+.header-nav .nav-primary {
+  display: flex !important;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1100px;                            /* tighten gap by limiting width */
+  list-style: none; margin: 0; padding: 0;
+  gap: 0;
+}
+.header-nav .nav-primary > li {
+  flex: 0 0 auto;
+}
+.header-nav .nav-primary > li > a {
+  color: var(--ink) !important;
+  font-family: var(--font-body);
+  font-size: 15px;                              /* +2px over Disturbia */
+  font-weight: 500;                             /* slightly heavier — reads stronger */
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  border-bottom: 0 !important;
+  padding: 8px 0;
+  position: relative;
+  transition: color 0.45s cubic-bezier(.785,.135,.15,.86);
+  display: inline-block;
+}
+/* Left-to-right underline slide — same easing/curve as the button
+   ::before scaleX reveal so all hover motion in the nav reads as
+   one consistent horizontal language. The line is anchored at the
+   left edge, scales 0 → 1 along the X axis, then on un-hover slides
+   back from left edge. */
+.header-nav .nav-primary > li > a {
+  outline: none !important;
+}
+.header-nav .nav-primary > li > a::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 2px;
+  height: 1.5px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.45s cubic-bezier(.785,.135,.15,.86);
+}
+.header-nav .nav-primary > li > a:hover::after,
+.header-nav .nav-primary > li > a:focus-visible::after,
+.header-nav .nav-primary > li > a.active::after {
+  transform: scaleX(1);
+}
+/* On un-hover, retract the line by anchoring at right edge instead
+   so it slides off to the right rather than collapsing back to left. */
+.header-nav .nav-primary > li > a:not(:hover):not(:focus-visible):not(.active)::after {
+  transform-origin: right center;
+}
+.header-nav .nav-primary > li > a:hover,
+.header-nav .nav-primary > li > a.active { color: var(--ink) !important; border: 0 !important; }
+.header-nav .nav-primary > li > a.nav-sale { color: var(--ink) !important; }
+.header-nav .nav-primary > li > a.nav-sale:hover { color: var(--sale) !important; }
+.header-nav .nav-primary > li > a.nav-sale:hover::after { background: var(--sale); }
+
+@media (max-width: 1100px) {
+  .header-nav { padding: 14px 32px; }
+  .header-nav .nav-primary > li > a { font-size: 13px; letter-spacing: 0.18em; }
+}
+
+/* =============================================================
+   Mega menu — re-anchor positioning so it never overflows viewport.
+   Original: each <li.has-mega> is the position context, so the panel
+   centres on the LI. For first/last items (e.g. MEN at left edge)
+   the panel shifts past the viewport edge.
+   Fix: make the NAV-PRIMARY container the position context. The
+   panel always centres on the nav row (which is centred on the page),
+   so it stays within the viewport regardless of which item triggered it.
+   ============================================================= */
+.header-nav .nav-primary { position: relative; }
+.header-nav .nav-primary li.has-mega {
+  position: static;                    /* overrides globals.css */
+  /* Bridge: extend the hit-test area down so the cursor can travel
+     from the nav text into the mega panel without crossing dead space. */
+  padding-bottom: 14px;
+  margin-bottom: -14px;                /* compensate so layout doesn't grow */
+}
+
+/* Full-width mega panel — spans the entire nav-primary container.
+   No matter which item triggers it (MEN at left, WOMEN second, etc.),
+   the panel always covers the full row width. Cursor moving DOWN
+   from any nav item lands inside the panel immediately — no chance
+   of crossing dead space, no first/last item overflow concerns.
+   Matches Disturbia's actual mega-drawer behaviour. */
+.header-nav .mega {
+  left: 0 !important;
+  right: 0 !important;
+  transform: none !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  width: 100% !important;
+  background: var(--paper) !important;
+  border: 1px solid var(--paper-3) !important;
+  border-top: 0 !important;
+  box-shadow: 0 12px 24px -12px rgba(0,0,0,0.08) !important;
+  margin-top: 0 !important;
+  padding: 32px 48px 24px !important;
+  transition: opacity 0.3s cubic-bezier(.785,.135,.15,.86) !important;
+}
+.header-nav .nav-primary li.has-mega:hover > .mega,
+.header-nav .nav-primary li.has-mega:focus-within > .mega {
+  transform: none !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+/* Constrain inner content (the 4 category columns) to the same
+   1280px container that the rest of the page uses, so categories
+   don't sprawl across a 2560px ultrawide viewport. */
+.header-nav .mega .row {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+.header-nav .mega .footer {
+  max-width: 1280px;
+  margin: 24px auto 0 !important;
+}
+
+/* Prevent the click on MEN/WOMEN from being intercepted by mega closing —
+   make the link itself fully clickable without delay. */
+.header-nav .nav-primary > li.has-mega > a {
+  position: relative;
+  z-index: 2;
+}
+/* Persist nav-link underline + colour while the mega menu is open */
+.header-nav .nav-primary > li.has-mega:hover > a::after,
+.header-nav .nav-primary > li.has-mega:focus-within > a::after {
+  width: 100%;
+  left: 0;
+}
+
+/* Mega menu typography polish */
+.header-nav .mega h5 {
+  font-family: var(--font-body);
+  letter-spacing: 0.16em;
+  color: var(--ink);
+  border-bottom-color: var(--paper-3);
+}
+.header-nav .mega ul a {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--ink);
+  letter-spacing: 0;
+}
+.header-nav .mega ul a:hover {
+  color: var(--ink-3) !important;
+  padding-left: 6px;
+}
+.header-nav .mega ul a .meta {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--ink-3);
+}
+.header-nav .mega .footer {
+  font-family: var(--font-body);
+  letter-spacing: 0.16em;
+}
+.header-nav .mega .footer a:hover { color: var(--ink-3) !important; }
+
+/* Hide the dropdown caret indicator next to MEN/WOMEN — cleaner look */
+.header-nav .nav-primary li.has-mega > a::before { content: none; }
+
+/* Keep 4 horizontal columns at all desktop widths — the mega panel
+   spans the full nav row, so we have ample horizontal space.
+   Override globals.css's 1100px breakpoint that drops it to 2 cols. */
+.header-nav .mega .row {
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 32px !important;
+}
+@media (max-width: 1024px) {
+  .header-nav .mega .row {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 24px !important;
+  }
+}
+@media (max-width: 900px) {
+  .header-nav .mega { display: none; }
+}
+
+@media (max-width: 900px) {
+  .header-top { grid-template-columns: auto 1fr auto; padding: 10px 16px; gap: 12px; }
+  .header-left { gap: 12px; }
+  .util-link { display: none; }
+  .header-left .util-link.util-currency { display: none; }
+  .header-nav { display: none; }
+  .brand { font-size: 22px; }
+  .icon-label { display: none; }
+}
+@media (max-width: 375px) {
+  .header-top { padding: 8px 12px; gap: 8px; }
+  .brand.brand--gothic { font-size: 28px !important; }
+  .newsletter-band { padding: 48px 16px 56px; }
+  .newsletter-band h3 { font-size: 24px; }
+  footer.site { padding: 48px 16px 24px; }
+  footer.site .foot-grid { gap: 40px; }
+  .foot-bottom { margin-top: 40px; }
+}
+
+/* Mega-menu */
+.mega {
+  background: #ffffff !important;
+  border: 1px solid var(--paper-3) !important;
+  box-shadow: 0 8px 24px -8px rgba(0,0,0,0.08) !important;
+}
+.mega h5 { color: var(--ink); border-bottom-color: var(--paper-3); }
+.mega ul a { color: var(--ink); font-family: var(--font-body); font-size: 13px; }
+.mega ul a:hover { color: var(--ink-3); padding-left: 4px; }
+.mega ul a .meta { color: var(--ink-3); }
+.mega .footer { border-top-color: var(--paper-3); color: var(--ink-3); }
+
+/* =============================================================
+   Hero — full-bleed image with right-centered CTA box
+   ============================================================= */
+.hero.hero-fullbleed {
+  display: block !important;
+  position: relative;
+  min-height: 80vh;
+  border-bottom: 0 !important;
+  grid-template-columns: none !important;
+}
+.hero.hero-fullbleed .hero-img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  background-size: cover;
+  /* Anchor on the model (left third) and the upper torso/face area
+     (~30% from top). Prevents the face from being cropped on wide
+     viewports where height < image-aspect would crop top/bottom. */
+  background-position: 25% 30% !important;
+}
+@media (max-width: 900px) {
+  .hero.hero-fullbleed .hero-img {
+    background-position: 30% 25% !important;
+  }
+}
+.hero.hero-fullbleed .hero-img::after {
+  background: linear-gradient(
+    90deg,
+    rgba(0,0,0,0) 0%,
+    rgba(0,0,0,0) 50%,
+    rgba(0,0,0,0.35) 100%
+  ) !important;
+  position: absolute; inset: 0; content: "";
+}
+.hero-overlay {
+  position: relative; z-index: 2;
+  max-width: 1440px; margin: 0 auto; height: 100%;
+  display: flex; flex-direction: column; justify-content: center;
+  align-items: flex-end;
+  padding: 80px 64px;
+  min-height: 80vh;
+}
+.hero-overlay .hero-eyebrow {
+  font-family: var(--font-body);
+  font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: #ffffff; margin-bottom: 16px;
+}
+.hero-overlay h1 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(36px, 5vw, 64px);
+  line-height: 1.1; letter-spacing: -0.005em;
+  color: #ffffff;
+  text-align: right; margin: 0 0 24px;
+  max-width: 520px;
+}
+/* Hero CTA sits on a dark hero image, so the colour scheme is inverted
+   from the default .btn-primary: white slab fills by default with ink
+   text; on hover the slab peels right, revealing the hero image, and
+   the text inverts to white so it remains readable against the dark
+   gradient. Same scaleX(1) → scaleX(0) curve, just inverted colours. */
+.hero-overlay .btn-primary {
+  color: var(--ink) !important;
+  border-color: #ffffff !important;
+  padding: 16px 36px;
+}
+.hero-overlay .btn-primary::before { background: #ffffff !important; }
+.hero-overlay .btn-primary:hover { color: #ffffff !important; }
+@media (max-width: 900px) {
+  .hero.hero-fullbleed { min-height: 70vh; }
+  .hero-overlay { align-items: center; padding: 32px 16px; min-height: 70vh; }
+  .hero-overlay h1 { text-align: center; }
+  .hero.hero-fullbleed .hero-img::after {
+    background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.35) 100%) !important;
+  }
+}
+
+/* =============================================================
+   Buttons — black solid + black outline, no red on hover
+   ============================================================= */
+.btn {
+  border-radius: 0;
+  font-family: var(--font-body);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 13px;                  /* +2px over Disturbia */
+  /* Verbatim from disturbia-audit/button-trace/matching-css-rules.txt:
+     `.Button { transition: color 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86),
+                            border 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86); }` */
+  transition: color 0.45s cubic-bezier(.785,.135,.15,.86),
+              border-color 0.45s cubic-bezier(.785,.135,.15,.86) !important;
+  position: relative !important;
+  z-index: 1;
+  background: transparent !important;
+  isolation: isolate;
+}
+
+/* Disturbia's exact button reveal mechanism. The ::before is a coloured
+   slab that fills the button by default; on hover it scales-X from 1 → 0
+   anchored at the right edge, so it "peels away to the right".
+   Verbatim values from the trace:
+     transform: scale(1); transform-origin: left center;
+     transition: transform 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+   On :hover →
+     transform-origin: right center; transform: scaleX(0); */
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  transform: scale(1);
+  transform-origin: left center;
+  transition: transform 0.45s cubic-bezier(.785,.135,.15,.86);
+}
+
+/* Primary: filled by default, peels away on hover. Text inverts white → ink. */
+.btn-primary { color: #ffffff !important; border-color: var(--ink) !important; }
+.btn-primary::before { background: var(--ink); }
+.btn-primary:hover { color: var(--ink) !important; border-color: var(--ink) !important; }
+.btn-primary:hover::before { transform-origin: right center; transform: scaleX(0); }
+
+/* Carousel-heading + bespoke-teaser CTAs use the primary mechanism */
+.carousel-heading .btn,
+.bespoke-teaser .btn { color: #ffffff !important; border-color: var(--ink) !important; }
+.carousel-heading .btn::before,
+.bespoke-teaser .btn::before { background: var(--ink); }
+.carousel-heading .btn:hover,
+.bespoke-teaser .btn:hover { color: var(--ink) !important; }
+.carousel-heading .btn:hover::before,
+.bespoke-teaser .btn:hover::before { transform-origin: right center; transform: scaleX(0); }
+
+/* Secondary: empty by default, fills from the left on hover.
+   Text inverts ink → white as the fill arrives. */
+.btn-secondary { color: var(--ink) !important; border-color: var(--ink) !important; }
+.btn-secondary::before {
+  background: var(--ink);
+  transform-origin: right center;
+  transform: scaleX(0);
+}
+.btn-secondary:hover { color: #ffffff !important; border-color: var(--ink) !important; }
+.btn-secondary:hover::before { transform-origin: left center; transform: scaleX(1); }
+
+@media (prefers-reduced-motion: reduce) {
+  .btn::before { transition: none; }
+}
+/* (Old direct-background rules for .btn-primary/.btn-secondary removed —
+   colors and reveal are now driven entirely by the ::before scaleX
+   mechanism above. Keeping a static background here would mask the
+   slab and break the wipe.) */
+.btn:hover { transform: none !important; }
+
+/* =============================================================
+   Form fields
+   ============================================================= */
+input, select, textarea {
+  background: #ffffff;
+  color: var(--ink);
+  border-color: var(--paper-3);
+}
+input:focus, select:focus, textarea:focus { border-color: var(--ink); }
+
+/* =============================================================
+   Carousel Showcase — heading panel on side + 6 horizontal products
+   Mirrors Disturbia's "New In" / "Women's Swimwear" sections.
+   Audit measurements: section height 420px, 6 products in row,
+   heading panel ~14% width, product gap 20px (--horizontal-spacing).
+   ============================================================= */
+.carousel-showcase {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) 7fr;
+  gap: 20px;
+  align-items: stretch;
+  padding: 48px;               /* aligned with container padding */
+  background: var(--paper);
+  border-top: 1px solid var(--paper-3);
+}
+.carousel-showcase--right { grid-template-columns: 7fr minmax(180px, 1fr); }
+.carousel-showcase--right .carousel-heading { order: 2; }
+.carousel-showcase--right .carousel-track   { order: 1; }
+
+.carousel-heading {
+  background: var(--paper-2);
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  padding: 32px 24px;
+  text-align: center; gap: 24px;
+}
+.carousel-heading h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 28px;                  /* +8px over Disturbia — bigger heading anchor */
+  letter-spacing: 0.18em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: var(--ink); margin: 0;
+}
+/* Layout only — color/background/hover handled above by the
+   .carousel-heading .btn rules in the swipe block, which use ::before
+   to do the scale-X reveal exactly like Disturbia. */
+.carousel-heading .btn {
+  padding: 14px 24px;
+  width: 100%;
+}
+
+.carousel-track {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 20px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  min-width: 0;
+}
+.carousel-cell { min-width: 0; }
+.carousel-cell .pcard .plate { aspect-ratio: 7/10; }
+
+@media (max-width: 1100px) {
+  .carousel-track { grid-template-columns: repeat(4, minmax(180px, 1fr)); }
+}
+@media (max-width: 900px) {
+  .carousel-showcase,
+  .carousel-showcase--right { grid-template-columns: 1fr; gap: 16px; padding: 32px 16px; }
+  .carousel-showcase--right .carousel-heading { order: 1; }
+  .carousel-showcase--right .carousel-track   { order: 2; }
+  .carousel-heading { padding: 24px; }
+  .carousel-track { grid-template-columns: repeat(3, minmax(180px, 1fr)); }
+}
+@media (max-width: 520px) {
+  .carousel-track { grid-template-columns: repeat(2, minmax(140px, 1fr)); gap: 8px; }
+}
+
+/* =============================================================
+   Product card — Disturbia pattern: centred, instant swap, flat
+   ============================================================= */
+.pcard { transition: none !important; }
+.pcard:hover { transform: none !important; }
+.pcard .plate {
+  aspect-ratio: 7/10;            /* Disturbia's real product card ratio (0.70) */
+  background: var(--paper-2);
+  box-shadow: none !important;
+  transition: none !important;
+}
+.pcard:hover .plate { box-shadow: none !important; }
+.pcard .plate img { transition: opacity 400ms var(--ease-soft) !important; }
+.pcard .meta { padding: 20px 0 0; text-align: center; }
+.pcard .name {
+  font-family: var(--font-body) !important;
+  font-size: 14px !important;                               /* +3px over Disturbia (more readable) */
+  font-weight: 400 !important;
+  letter-spacing: normal !important;
+  color: var(--ink) !important;
+  text-transform: none;
+  white-space: normal;
+  line-height: 1.5;
+  margin-bottom: 8px !important;
+  min-height: 3em;
+}
+.pcard .row { justify-content: center; gap: 8px; margin-top: 4px; }
+.pcard .price {
+  font-family: var(--font-body) !important;
+  font-size: 14px !important;                               /* +3px over Disturbia */
+  font-weight: 500 !important;
+  color: var(--ink) !important;                             /* full ink, not muted — more prominent */
+  letter-spacing: 0.1em !important;
+  text-transform: none;                                     /* drop uppercase — easier to read prices */
+}
+.pcard .tag { display: none; }
+.pcard .badge {
+  background: #ffffff !important;
+  color: var(--ink) !important;
+  border: 1px solid var(--paper-3);
+  padding: 2px 6px !important;
+  font-size: 10px !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase;
+}
+/* Sale badge gets the red */
+.pcard .badge[data-sale="true"],
+.pcard .badge.sale {
+  background: var(--sale) !important;
+  color: #ffffff !important;
+  border-color: var(--sale);
+}
+/* SALE tag — top-right corner */
+.pcard .badge-sale {
+  position: absolute;
+  top: var(--s-3);
+  right: var(--s-3);
+  left: auto !important;
+  background: var(--sale) !important;
+  color: #ffffff !important;
+  border: none !important;
+  padding: 2px 6px !important;
+  font-size: 10px !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase;
+}
+
+/* =============================================================
+   Collection Banner — full-width editorial image strip
+   (mirrors Disturbia's "Women's Swimwear" banner pattern)
+   ============================================================= */
+.coll-banner {
+  position: relative;
+  width: 100%;
+  height: 420px;
+  overflow: hidden;
+  display: block;
+  border-top: var(--rule);
+  border-bottom: var(--rule);
+}
+.coll-banner-img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  background-size: cover;
+  background-position: center 30%;
+  transition: transform 8s cubic-bezier(.25,.46,.45,.94);
+}
+.coll-banner:hover .coll-banner-img {
+  transform: scale(1.04);
+}
+.coll-banner-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(0,0,0,0.62) 0%,
+    rgba(0,0,0,0.28) 50%,
+    rgba(0,0,0,0.04) 100%
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 72px;
+  gap: var(--s-5);
+}
+.coll-banner-eyebrow {
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.7);
+  display: flex; align-items: center; gap: var(--s-3);
+}
+.coll-banner-eyebrow::before {
+  content: "";
+  width: 24px; height: 1px;
+  background: rgba(255,255,255,0.5);
+  flex-shrink: 0;
+}
+.coll-banner h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(28px, 3.5vw, 52px);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  max-width: 480px;
+}
+.coll-banner h2 em {
+  font-style: italic;
+  color: rgba(255,255,255,0.82);
+}
+.coll-banner-cta {
+  align-self: flex-start;
+}
+.coll-banner .btn-primary {
+  color: var(--ink) !important;
+  border-color: #ffffff !important;
+}
+.coll-banner .btn-primary::before { background: #ffffff !important; }
+.coll-banner .btn-primary:hover { color: #ffffff !important; }
+
+@media (max-width: 900px) {
+  .coll-banner { height: 320px; }
+  .coll-banner-overlay { padding: 0 var(--pad-x-m); }
+  .coll-banner h2 { font-size: clamp(24px, 6vw, 36px); max-width: 280px; }
+}
+@media (max-width: 520px) {
+  .coll-banner { height: 260px; }
+  .coll-banner-overlay { gap: var(--s-3); }
+}
+
+/* =============================================================
+   Product grid — 4-up desktop, 2-up tablet, 2-up mobile
+   ============================================================= */
+.season .grid {
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 20px !important;
+}
+@media (max-width: 1100px) { .season .grid { grid-template-columns: repeat(3, 1fr) !important; } }
+@media (max-width: 900px)  { .season .grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; } }
+@media (max-width: 520px)  { .season .grid { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; } }
+
+/* =============================================================
+   Section heads — drop the numbering / meta, centre headings
+   ============================================================= */
+.sec-head {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  border-bottom: 0 !important;
+  padding-bottom: 0 !important;
+  margin-bottom: 32px;
+}
+.sec-head h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(22px, 2.6vw, 32px);
+  letter-spacing: -0.005em;
+}
+.sec-head .meta { display: none !important; }
+
+/* =============================================================
+   Made-for-you cards — neutralise hover, drop accent
+   ============================================================= */
+.mfy { background: var(--paper); }
+.mfy .grid { background: var(--paper-3); }
+.mfy .card { background: var(--paper); }
+.mfy .card:hover { background: var(--paper-2); }
+.mfy .card:hover .photo { transform: none; }
+.mfy h3 { font-weight: 400; font-size: 22px; }
+.mfy .arrow { color: var(--ink); }
+.mfy .card:hover .arrow { color: var(--ink-3); }
+
+/* =============================================================
+   Editorial section (legacy — single split image+copy block)
+   ============================================================= */
+.editorial h3 em { color: var(--ink) !important; font-style: italic; }
+.editorial { border-color: var(--paper-3) !important; }
+
+/* =============================================================
+   EditorialSplit — image on one side, 3x2 product grid on other
+   ============================================================= */
+.ed-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  background: var(--paper);
+}
+.ed-split--right { grid-template-areas: "grid img"; }
+.ed-split--right .ed-split-img { grid-area: img; }
+.ed-split--right .ed-split-grid { grid-area: grid; }
+
+.ed-split-img {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ed-split-img::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.25) 100%);
+}
+.ed-split-overlay {
+  position: relative; z-index: 2;
+  text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 24px;
+  padding: 32px;
+}
+.ed-split-overlay h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 36px;                  /* +12px — hero-overlay scale */
+  letter-spacing: 0.18em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin: 0;
+  text-shadow: 0 2px 16px rgba(0,0,0,0.5);
+}
+.ed-split-overlay .btn-primary {
+  background: var(--ink); color: #ffffff; border-color: var(--ink);
+  padding: 14px 32px;
+}
+.ed-split-overlay .btn-primary:hover { background: #000000; border-color: #000000; }
+
+.ed-split-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  background: var(--paper);
+}
+.ed-split-grid .pcard { border: 1px solid transparent; }
+.ed-split-grid .pcard .plate { aspect-ratio: 7/10; }
+.ed-split-grid .pcard .meta { padding: 12px 12px 24px; }
+
+@media (max-width: 1100px) {
+  .ed-split { grid-template-columns: 1fr; }
+  .ed-split--right { grid-template-areas: "img" "grid"; }
+  .ed-split-img { min-height: 420px; }
+  .ed-split-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 720px) {
+  .ed-split-grid { grid-template-columns: repeat(2, 1fr); }
+  .ed-split-img { min-height: 320px; }
+}
+
+/* =============================================================
+   Bespoke teaser — keep dark band but neutral red→none
+   ============================================================= */
+.bespoke-teaser h3 em { color: #cccccc !important; font-style: italic; }
+/* Bespoke teaser sits on a dark gradient band — same inversion as the
+   hero CTA: white slab default, peels right to dark band, text inverts. */
+.bespoke-teaser .btn {
+  color: var(--ink) !important;
+  border-color: #ffffff !important;
+}
+.bespoke-teaser .btn::before { background: #ffffff !important; }
+.bespoke-teaser .btn:hover { color: #ffffff !important; }
+.bespoke-teaser .btn:hover::before { transform-origin: right center; transform: scaleX(0); }
+
+/* =============================================================
+   Newsletter band — full-width centred above footer
+   ============================================================= */
+.newsletter-band {
+  background: var(--paper);
+  padding: 80px 24px 96px;
+  text-align: center;
+}
+.newsletter-band h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(28px, 3.4vw, 40px);
+  line-height: 1.2; letter-spacing: 0;
+  color: var(--ink);
+  max-width: 520px; margin: 0 auto 32px;
+}
+.newsletter-band .news {
+  max-width: 640px; margin: 0 auto;
+  display: flex !important; flex-direction: column; gap: 12px;
+  border: 0 !important; background: transparent !important;
+}
+.newsletter-band .news input,
+.newsletter-band .news select {
+  width: 100%; padding: 14px 16px;
+  border: 1px solid var(--paper-3);
+  background: #ffffff; color: var(--ink);
+  font-family: var(--font-body); font-size: 14px;
+}
+.newsletter-band .news button {
+  background: var(--ink) !important; color: #ffffff !important;
+  background-image: none !important; animation: none !important;
+  font-family: var(--font-body); font-size: 12px;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  padding: 16px !important; border: 0 !important; cursor: pointer;
+  width: 100%;
+}
+.newsletter-band .news button:hover { background: #000000 !important; }
+
+/* =============================================================
+   Footer — 3-column: Help & Info | Brand | Social + Rating
+   Spacing-first design: generous padding, breathable line-height,
+   serif-uppercase headings sitting above quiet sans link columns.
+   ============================================================= */
+footer.site {
+  background: var(--paper);
+  border-top: 1px solid #e8e8e8;
+  padding: 96px 48px 32px;     /* aligned with container padding */
+}
+footer.site .foot-grid {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  max-width: 1280px; margin: 0 auto;
+  gap: 80px;
+  align-items: stretch;        /* equalise column heights */
+}
+.foot-col {
+  display: flex; flex-direction: column; align-items: center;
+}
+.foot-col h4 {
+  font-family: var(--font-display) !important;
+  font-weight: 400 !important;
+  font-size: 16px !important;                         /* +3px over Disturbia */
+  letter-spacing: 0.2em !important;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin: 0 0 36px;
+  text-align: center;
+}
+.foot-col ul {
+  list-style: none; padding: 0; margin: 0;
+  display: flex; flex-direction: column;
+  gap: 22px;                       /* generous breathing room */
+  align-items: center;
+  width: 100%;
+}
+.foot-col ul li { width: 100%; text-align: center; }
+.foot-col ul a {
+  font-family: var(--font-body) !important;
+  font-size: 15px !important;         /* +2px over Disturbia */
+  color: var(--ink);
+  letter-spacing: normal !important;
+  font-weight: 400 !important;
+  line-height: 1.6;
+  transition: color 0.2s ease;
+}
+.foot-col ul a:hover { color: var(--ink-3); }
+
+/* Social column — centred icons + rating badge stacked.
+   justify-content: space-around distributes the icons + rating
+   evenly so the column visually fills its height alongside the
+   text-link columns. */
+.foot-col-social {
+  align-items: center;
+  justify-content: space-around;
+  gap: 32px;
+  min-height: 100%;            /* fill the stretched grid track */
+}
+.social-row {
+  display: flex; gap: 28px;
+  align-items: center; justify-content: center;
+}
+.social-icon {
+  color: var(--ink);
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+.social-icon:hover {
+  color: var(--ink-3);
+  transform: translateY(-2px);
+}
+
+/* Generic rating badge — green star squares, not Trustpilot-branded */
+.rating-badge {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  padding-top: 16px;
+}
+.rating-label {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 18px;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+}
+.rating-stars { display: inline-flex; gap: 3px; }
+.star-square {
+  width: 22px; height: 22px;
+  background: #00b67a;             /* generic review-platform green */
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.rating-meta {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ink-3);
+  letter-spacing: 0.04em;
+  margin-top: 4px;
+}
+
+/* Bottom utility row */
+.foot-bottom {
+  max-width: 1280px; margin: 80px auto 0;
+  padding-top: 32px;
+  border-top: 1px solid #e8e8e8;
+  display: flex; flex-direction: column; align-items: center; gap: 20px;
+  font-family: var(--font-body); font-size: 11px;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3);
+}
+.foot-bottom .payments {
+  display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;
+}
+.foot-bottom .payments span {
+  font-family: var(--font-body); font-size: 10px;
+  letter-spacing: 0.14em; color: var(--ink-3);
+  padding: 6px 12px; border: 1px solid #e8e8e8;
+  background: #fafafa;
+}
+
+@media (max-width: 900px) {
+  footer.site { padding: 64px 24px 24px; }
+  footer.site .foot-grid { grid-template-columns: 1fr; gap: 56px; }
+  .foot-col h4 { margin-bottom: 24px; font-size: 18px; }
+  .foot-col ul { gap: 18px; }
+  .foot-bottom { margin-top: 56px; }
+}
+
+/* =============================================================
+   Trust icons row + Support row (replaces old trust-strip)
+   ============================================================= */
+.trust-icons {
+  border-top: 1px solid var(--paper-3);
+  background: var(--paper);
+}
+.trust-icons-row {
+  max-width: 1200px; margin: 0 auto;
+  padding: 56px 32px;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;
+  align-items: start;
+}
+.trust-item { text-align: center; color: var(--ink); }
+.trust-item svg { width: 44px; height: 44px; margin: 0 auto 12px; display: block; color: var(--ink); }
+.trust-title {
+  font-family: var(--font-body);
+  font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--ink); margin-bottom: 4px;
+}
+.trust-sub {
+  font-family: var(--font-body); font-size: 12px;
+  color: var(--ink-3); letter-spacing: 0.04em;
+}
+
+.support-row {
+  background: var(--paper-2);
+  padding: 28px 32px;
+  text-align: center;
+  border-top: 1px solid var(--paper-3);
+}
+.support-title {
+  font-family: var(--font-body);
+  font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--ink); margin-bottom: 12px;
+}
+.support-links {
+  display: flex; justify-content: center; gap: 48px; flex-wrap: wrap;
+}
+.support-links a {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--ink);
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.support-links a:hover { color: var(--ink-3); }
+@media (max-width: 720px) {
+  .trust-icons-row { grid-template-columns: 1fr; gap: 32px; padding: 32px 16px; }
+  .support-links { gap: 16px; }
+  .support-links a { font-size: 13px; }
+}
+
+/* legacy trust-strip styles still apply where used */
+.trust-strip { border-color: var(--paper-3); background: var(--paper); display: none; }
+
+/* =============================================================
+   Hide elements that don't belong in a Disturbia-restraint feel
+   ============================================================= */
+.scroll-progress { display: none !important; }
+.ribbon { display: none !important; }
+/* Word-mask reveals restored — staggered word-by-word rise on the
+   hero headline gives editorial weight to the opening line.
+   Blur filter stays off (flatter Disturbia feel). */
+.rev { filter: none !important; }
+
+/* =============================================================
+   Product Detail Page (PDP) — make it match the homepage feel.
+   The inner CSS in ProductPageClient.tsx references design tokens
+   (var(--paper), var(--ink) etc) which already cascade from
+   globals.css + disturbia.css. The few overrides below correct
+   typography weight + a couple of legacy hard-coded values.
+   ============================================================= */
+
+/* Display headings: drop weight from 500 to 400 (Libre Baskerville
+   reads heavier than Cormorant did at the same weight). */
+.pd .info h1,
+.spec h2,
+.note .body p,
+.worn h2,
+.empty h3 {
+  font-weight: 400 !important;
+  letter-spacing: -0.005em;
+}
+
+/* PDP main + thumb plates: cool grey neutral, matches product cards */
+.pd .main,
+.pd .thumb,
+.worn .plate { background: var(--paper-2) !important; }
+
+/* PDP card aspect alignment with homepage product cards (7:10) */
+.pd .main, .pd .thumb { aspect-ratio: 7/10 !important; }
+.worn .plate { aspect-ratio: 7/10 !important; }
+
+/* Switcher chips at top of PDP — soften to match new palette */
+.switcher { background: var(--paper-2) !important; border-bottom: 1px solid var(--paper-3) !important; }
+.switcher-chips a {
+  border-color: var(--paper-3) !important;
+  font-family: var(--font-body) !important;
+  font-size: 11px !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase;
+}
+.switcher-chips a:hover { border-color: var(--ink) !important; color: var(--ink) !important; }
+.switcher-chips a.on { background: var(--ink) !important; color: #ffffff !important; border-color: var(--ink) !important; }
+
+/* Size buttons — match button rhythm */
+.size {
+  font-family: var(--font-body) !important;
+  font-size: 12px !important;
+  letter-spacing: 0.04em !important;
+}
+.size.on { background: var(--ink) !important; color: #ffffff !important; border-color: var(--ink) !important; }
+
+/* PDP price / mono labels read as body sans now */
+.price, .tax-line,
+.feature-list h4,
+.spec td.k,
+.info-acc summary,
+.lb-counter {
+  font-family: var(--font-body) !important;
+  letter-spacing: 0.16em !important;
+  text-transform: uppercase;
+  font-weight: 500 !important;
+}
+.price { font-size: 18px !important; letter-spacing: 0.04em !important; text-transform: none; }
+
+/* Note section portrait — drop the warm Unsplash placeholder, use
+   a neutral atelier-tone solid */
+.note .portrait { background-image: linear-gradient(135deg, #d8d8d8, #e8e6e3) !important; }
+
+/* Worn-with grid → match 7:10 cards, instant swap, flat */
+.worn .pcard:hover .plate img { transform: none !important; }
+.worn .name { font-family: var(--font-body) !important; font-size: 12px !important; font-weight: 400 !important; letter-spacing: 0.04em !important; }
+.worn .price { font-family: var(--font-body) !important; font-size: 12px !important; color: var(--ink-3) !important; }
+
+/* Lightbox — neutral dark backdrop instead of warm sepia rgba(10,8,6,...) */
+.lightbox { background: rgba(0, 0, 0, 0.92) !important; }
+
+/* =============================================================
+   Process + section paddings — tighten
+   ============================================================= */
+.process .step .num { color: var(--ink); font-style: normal; font-size: 36px; }
+.process .step h4 { font-weight: 400; }
+section.page { padding-top: 64px; padding-bottom: 64px; }
+
+/* =============================================================
+   Mobile hamburger + drawer (light)
+   ============================================================= */
+.hamburger {
+  display: none;
+  background: transparent; border: 0; padding: 8px;
+  width: 44px; height: 44px; cursor: pointer; color: var(--ink);
+}
+.hamburger span {
+  display: block; width: 22px; height: 1.5px; background: currentColor;
+  margin: 5px 0; transition: transform 250ms ease, opacity 250ms ease;
+}
+.hamburger[aria-expanded="true"] span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.hamburger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+.hamburger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+@media (max-width: 900px) {
+  .hamburger { display: inline-flex; align-items: center; justify-content: center; }
+}
+
+.mobile-drawer {
+  position: fixed; inset: 0;
+  background: #cccccc;           /* Disturbia's --sidebar-menu-background */
+  z-index: 200;
+  padding: 80px 24px 48px;
+  display: flex; flex-direction: column; gap: 16px;
+  transform: translateX(-100%);
+  transition: transform 350ms cubic-bezier(.645,.045,.355,1);
+  overflow-y: auto;
+}
+.mobile-drawer[data-open="true"] { transform: translateX(0); }
+.mobile-drawer a {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink);
+  padding: 14px 0;
+  border-bottom: 1px solid var(--paper-3);
+}
+.mobile-drawer a:hover { color: var(--ink-3); }
+.mobile-drawer .close {
+  position: absolute; top: 18px; right: 18px;
+  width: 44px; height: 44px;
+  background: transparent; border: 0; color: var(--ink);
+  font-size: 28px; cursor: pointer;
+}
+.mobile-drawer .group {
+  font-family: var(--font-body);
+  font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 16px 0 4px;
+}
+
+/* =============================================================
+   Loading / error / 404 boundaries
+   ============================================================= */
+.page-loading {
+  position: fixed; inset: 0;
+  background: var(--paper); z-index: 300;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 32px;
+}
+.page-loading-mark {
+  font-family: "Pirata One", "Libre Baskerville", serif;
+  font-size: 48px; letter-spacing: 0.04em; color: var(--ink);
+}
+.page-loading-bar {
+  width: 200px; height: 1px; background: var(--paper-3); overflow: hidden;
+}
+.page-loading-bar span {
+  display: block; height: 100%; width: 40%; background: var(--ink);
+  animation: pageLoadingSlide 1.2s cubic-bezier(.785,.135,.15,.86) infinite;
+}
+@keyframes pageLoadingSlide {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(450%); }
+}
+
+.page-error, .page-404 {
+  min-height: calc(100vh - 200px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 96px 24px; background: var(--paper);
+}
+.page-error-inner, .page-404-inner {
+  max-width: 560px; text-align: center;
+}
+.page-error-mark, .page-404-code {
+  font-family: "Pirata One", "Libre Baskerville", serif;
+  font-size: 56px; letter-spacing: 0.04em; color: var(--ink);
+  margin-bottom: 24px;
+}
+.page-404-code { font-size: 96px; }
+.page-error h1, .page-404 h1 {
+  font-family: var(--font-display); font-weight: 400;
+  font-size: clamp(24px, 3vw, 32px); line-height: 1.3;
+  margin: 0 0 16px; color: var(--ink);
+}
+.page-error p, .page-404 p {
+  font-family: var(--font-body); font-size: 15px; line-height: 1.6;
+  color: var(--ink-3); margin: 0 0 32px;
+}
+.page-error-actions, .page-404-actions {
+  display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+}
+.page-error-digest {
+  margin-top: 32px;
+  font-family: var(--font-body); font-size: 11px;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* =============================================================
+   Cart side-drawer (slides from right)
+   ============================================================= */
+.cart-trigger {
+  background: transparent; border: 0; cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink); padding: 0;
+}
+.cart-trigger:hover { color: var(--ink-3); }
+
+.cart-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 199;
+  opacity: 0; pointer-events: none;
+  transition: opacity 350ms cubic-bezier(.645,.045,.355,1);
+}
+.cart-overlay[data-open="true"] { opacity: 1; pointer-events: auto; }
+
+.cart-drawer {
+  position: fixed; top: 0; right: 0; bottom: 0;
+  width: min(420px, 100vw);
+  background: #ffffff;
+  z-index: 200;
+  display: flex; flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 500ms cubic-bezier(.645,.045,.355,1);
+  box-shadow: -8px 0 24px -8px rgba(0,0,0,0.12);
+}
+.cart-drawer[data-open="true"] { transform: translateX(0); }
+
+.cart-drawer-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--paper-3);
+  font-family: var(--font-body);
+  font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ink);
+}
+.cart-drawer-head .close {
+  background: transparent; border: 0; cursor: pointer;
+  font-size: 28px; line-height: 1; color: var(--ink);
+  padding: 0; width: 32px; height: 32px;
+}
+.cart-drawer-body {
+  flex: 1; overflow-y: auto;
+  padding: 24px;
+}
+.cart-empty {
+  text-align: center; padding: 64px 0;
+}
+.cart-empty p {
+  font-family: var(--font-body);
+  color: var(--ink-3); margin: 0 0 24px;
+  letter-spacing: 0.04em;
+}
+.cart-stub { color: var(--ink-3); font-size: 13px; }
+.cart-drawer-foot {
+  padding: 16px 24px 24px;
+  border-top: 1px solid var(--paper-3);
+}
+
+/* =============================================================
+   Announcement bar — Disturbia has one above the header
+   ============================================================= */
+.announce-bar {
+  background: #0f0d0c;
+  color: rgba(255,255,255,0.78);
+  font-family: var(--font-body);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 400;
+  height: 44px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+
+/* Refined edge fade */
+.announce-bar::before,
+.announce-bar::after {
+  content: "";
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 120px;
+  z-index: 2;
+  pointer-events: none;
+}
+.announce-bar::before { left:  0; background: linear-gradient(90deg,  #0f0d0c 30%, transparent 100%); }
+.announce-bar::after  { right: 0; background: linear-gradient(270deg, #0f0d0c 30%, transparent 100%); }
+
+/* Ticker — slow, deliberate pace for luxury feel */
+.announce-ticker {
+  display: flex;
+  white-space: nowrap;
+  width: max-content;
+  animation: announceTicker 48s linear infinite;
+  will-change: transform;
+}
+.announce-bar:hover .announce-ticker {
+  animation-play-state: paused;
+}
+
+@keyframes announceTicker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.announce-ticker__track {
+  display: inline-flex;
+  align-items: center;
+}
+
+.announce-item {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 48px;
+  gap: 0;
+  transition: color 300ms ease;
+}
+
+/* Thin line separator */
+.announce-sep {
+  display: inline-block;
+  width: 1px;
+  height: 12px;
+  background: rgba(255,255,255,0.22);
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+.announce-accent {
+  color: #ffffff;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .announce-ticker { animation: none; }
+}
+
