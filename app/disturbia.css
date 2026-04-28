@@ -22,8 +22,8 @@
 
 :root {
   /* ---------- Typography ---------- */
-  --font-display: "Cormorant Garamond", "EB Garamond", Georgia, serif;
-  --font-body:    "DM Sans", -apple-system, "Helvetica Neue", sans-serif;
+  --font-display: "Libre Baskerville", "Cormorant Garamond", Georgia, serif;
+  --font-body:    "Roboto", -apple-system, "Helvetica Neue", sans-serif;
 
   /* Type scale — pulled DOWN closer to Disturbia's modest scale.   */
   /* They run 13/14px base and small headings. We compromise with   */
@@ -46,15 +46,15 @@
   --t-body-lg-lh: 1.7;
 
   /* ---------- Surfaces (light, like Disturbia) ---------- */
-  --paper:   #FDFBF8;
-  --paper-2: #F5F1EB;
-  --paper-3: #E2DDD7;
+  --paper:   #ffffff;
+  --paper-2: #fafafa;
+  --paper-3: #dddddd;
 
   /* ---------- Ink ---------- */
-  --ink:   #1A1613;
-  --ink-2: #1A1613;
-  --ink-3: #7A7168;
-  --ink-4: #B8AFA3;
+  --ink:   #1c1b1b;
+  --ink-2: #1c1b1b;
+  --ink-3: #6a6a6a;
+  --ink-4: #aaaaaa;
 
   /* ---------- Accent — RESERVED for sale/limited only ---------- */
   /* Disturbia uses #f94c43 only for sale prices. We follow that. */
