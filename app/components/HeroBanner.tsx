@@ -40,7 +40,7 @@ const CSS = `
 .hb-img::after {
   content: "";
   position: absolute; inset: 0;
-  background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.05) 50%, rgba(0,0,0,.45) 100%);
+  background: linear-gradient(90deg, rgba(0,0,0,0) 20%, rgba(0,0,0,.22) 55%, rgba(0,0,0,.65) 100%);
 }
 .hb-overlay {
   position: relative; z-index: 2;

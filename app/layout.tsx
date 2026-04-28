@@ -1,8 +1,25 @@
 import type { Metadata } from "next";
+import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import "./globals.css";
 import "./disturbia.css";
 
-const SITE_URL = "https://elitezonej.com"; // update when production domain is set
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+  style: ["normal", "italic"],
+  variable: "--font-display",
+  display: "swap",
+});
+
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  weight: ["300", "400", "500"],
+  style: ["normal", "italic"],
+  variable: "--font-body",
+  display: "swap",
+});
+
+const SITE_URL = "https://elitezonej.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -50,22 +67,12 @@ export const metadata: Metadata = {
 export const viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#ffffff",
+  themeColor: "#FDFBF8",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        {/* Only the three fonts the Disturbia theme actually uses now —
-            dropped Cormorant, Montserrat, JetBrains Mono (~250 KB saved). */}
-        <link
-          href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Pirata+One&family=Roboto:wght@300;400;500;700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
+    <html lang="en" className={`${cormorant.variable} ${dmSans.variable}`}>
       <body>{children}</body>
     </html>
   );

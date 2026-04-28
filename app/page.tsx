@@ -210,8 +210,8 @@ export default function Home() {
         title="The Men's Edit"
         ctaLabel="Shop Menswear"
         ctaHref="/collection?c=men"
-        image="/generated/_sections/service-bespoke.webp"
-        imageAlt="Master tailor measuring a client"
+        image="/generated/_sections/atelier.webp"
+        imageAlt="Master tailor at the atelier"
         imageSide="left"
         products={men}
       />
@@ -221,8 +221,8 @@ export default function Home() {
         title="The Women's Edit"
         ctaLabel="Shop Womenswear"
         ctaHref="/collection?c=women"
-        image="/generated/_sections/editorial-wedding.webp"
-        imageAlt="The Wedding Wardrobe — sherwani"
+        image="/generated/aria-pant-suit/01-front.webp"
+        imageAlt="The Women's Edit — aria pant suit"
         imageSide="right"
         products={women}
       />
