@@ -312,17 +312,9 @@ header.site {
 }
 .brand a { color: inherit; }
 
-/* Gothic wordmark — !important on every prop because page.tsx
-   HOME_CSS injects an inline <style> after disturbia.css loads,
-   and at equal specificity source order wins. */
-.brand.brand--gothic {
-  font-family: "Pirata One", "Libre Baskerville", serif !important;
-  font-size: clamp(42px, 4.4vw, 60px) !important;
-  font-weight: 400 !important;
-  letter-spacing: 0.03em !important;
-  line-height: 1 !important;
-}
-@media (max-width: 900px) { .brand.brand--gothic { font-size: 32px !important; } }
+/* Logo links */
+.brand-logo-link { display: flex; align-items: center; }
+.foot-logo-link  { display: flex; justify-content: center; margin-bottom: 28px; }
 
 /* =============================================================
    Side-rail rotated promo sticker + dismiss button + modal
@@ -734,12 +726,11 @@ header.site {
   .util-link { display: none; }
   .header-left .util-link.util-currency { display: none; }
   .header-nav { display: none; }
-  .brand { font-size: 22px; }
+  .brand { font-size: 22px; } /* fallback if logo fails to load */
   .icon-label { display: none; }
 }
 @media (max-width: 375px) {
   .header-top { padding: 8px 12px; gap: 8px; }
-  .brand.brand--gothic { font-size: 28px !important; }
   .newsletter-band { padding: 48px 16px 56px; }
   .newsletter-band h3 { font-size: 24px; }
   footer.site { padding: 48px 16px 24px; }
@@ -1321,7 +1312,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--ink); }
 footer.site {
   background: var(--paper);
   border-top: 1px solid #e8e8e8;
-  padding: 96px 48px 32px;     /* aligned with container padding */
+  padding: 96px 48px 32px;
 }
 footer.site .foot-grid {
   display: grid; grid-template-columns: 1fr 1fr 1fr;
@@ -1646,8 +1637,7 @@ section.page { padding-top: 64px; padding-bottom: 64px; }
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 32px;
 }
 .page-loading-mark {
-  font-family: "Pirata One", "Libre Baskerville", serif;
-  font-size: 48px; letter-spacing: 0.04em; color: var(--ink);
+  height: 42px; width: auto; display: block;
 }
 .page-loading-bar {
   width: 200px; height: 1px; background: var(--paper-3); overflow: hidden;
@@ -1669,12 +1659,13 @@ section.page { padding-top: 64px; padding-bottom: 64px; }
 .page-error-inner, .page-404-inner {
   max-width: 560px; text-align: center;
 }
-.page-error-mark, .page-404-code {
-  font-family: "Pirata One", "Libre Baskerville", serif;
-  font-size: 56px; letter-spacing: 0.04em; color: var(--ink);
-  margin-bottom: 24px;
+.page-error-mark {
+  height: 38px; width: auto; display: block; margin: 0 auto 32px;
 }
-.page-404-code { font-size: 96px; }
+.page-404-code {
+  font-family: var(--font-display); font-size: 96px; font-weight: 300;
+  letter-spacing: -0.04em; color: var(--ink); margin-bottom: 24px; line-height: 1;
+}
 .page-error h1, .page-404 h1 {
   font-family: var(--font-display); font-weight: 400;
   font-size: clamp(24px, 3vw, 32px); line-height: 1.3;

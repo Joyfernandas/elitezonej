@@ -61,7 +61,15 @@ export const metadata: Metadata = {
     index: true, follow: true,
     googleBot: { index: true, follow: true, "max-image-preview": "large" },
   },
-  icons: { icon: "/favicon.ico" },
+  icons: {
+    icon: [
+      { url: "/logo/favicon-32.png",  type: "image/png", sizes: "32x32"  },
+      { url: "/logo/favicon-64.png",  type: "image/png", sizes: "64x64"  },
+      { url: "/logo/favicon-512.png", type: "image/png", sizes: "512x512" },
+    ],
+    apple: "/logo/favicon-180.png",
+    shortcut: "/logo/favicon-32.png",
+  },
 };
 
 export const viewport = {

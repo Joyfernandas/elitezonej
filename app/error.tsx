@@ -21,7 +21,8 @@ export default function ErrorBoundary({
   return (
     <div className="page-error">
       <div className="page-error-inner">
-        <div className="page-error-mark">Elite Zone J</div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logo/wordmark-trimmed.png" alt="Elite Zone J" className="page-loading-mark" />
         <h1>Something went wrong.</h1>
         <p>An unexpected error occurred. Please try again, or return to the home page.</p>
         <div className="page-error-actions">

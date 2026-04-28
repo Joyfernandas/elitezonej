@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import MobileNav from "./MobileNav";
 import CartDrawer from "./CartDrawer";
 
@@ -67,8 +68,17 @@ export default function Header() {
           </button>
         </div>
 
-        <div className="brand brand--gothic">
-          <Link href="/" style={{ color: "inherit" }}>Elite Zone J</Link>
+        <div className="brand">
+          <Link href="/" className="brand-logo-link">
+            <Image
+              src="/logo/lockup-trimmed.png"
+              alt="Elite Zone J"
+              width={860}
+              height={227}
+              priority
+              style={{ height: "clamp(32px, 3.8vw, 52px)", width: "auto", display: "block" }}
+            />
+          </Link>
         </div>
 
         <div className="header-right">

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import NewsletterForm from "./NewsletterForm";
 
 // Social icons drawn in their conventional brand-recognisable silhouettes.
@@ -74,6 +75,9 @@ export default function Footer({ minimal = false }: { minimal?: boolean }) {
     return (
       <footer className="site site--minimal">
         <div className="foot-bottom-min">
+          <Link href="/" className="foot-logo-link">
+            <Image src="/logo/wordmark-trimmed.png" alt="Elite Zone J" width={892} height={116} style={{ height: "26px", width: "auto", display: "block" }} />
+          </Link>
           <span>© 2026 Elite Zone J</span>
           <span>Visa · Mastercard · UPI · Net Banking · COD</span>
           <span>Designed and tailored in India</span>
@@ -106,7 +110,15 @@ export default function Footer({ minimal = false }: { minimal?: boolean }) {
           </div>
 
           <div className="foot-col foot-col-center">
-            <h4>Elite Zone J</h4>
+            <Link href="/" className="foot-logo-link">
+              <Image
+                src="/logo/wordmark-trimmed.png"
+                alt="Elite Zone J"
+                width={892}
+                height={116}
+                style={{ height: "44px", width: "auto", display: "block" }}
+              />
+            </Link>
             <ul>
               <li><Link href="/bespoke">About</Link></li>
               <li><Link href="/bespoke">Our People</Link></li>

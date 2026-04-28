@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
   // no longer OOMs the worker. Re-enabled to serve responsive variants
   // and modern formats per viewport.
   images: {
-    formats: ["image/avif", "image/webp"],
+    formats: ["image/webp"],
     deviceSizes: [640, 768, 1024, 1280, 1536, 1920],
     imageSizes: [128, 256, 384],
     minimumCacheTTL: 60 * 60 * 24 * 30, // 30 days
