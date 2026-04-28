@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Elite Zone J
 
-## Getting Started
+Premium Indian tailoring and fashion e-commerce — built with Next.js 16 App Router.
 
-First, run the development server:
+**Live site:** [web-two-mocha-61.vercel.app](https://web-two-mocha-61.vercel.app)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## What it is
+
+Elite Zone J is a made-to-measure clothing brand for men and women. The storefront covers the full shopping journey — browsing collections, viewing product details, booking bespoke fittings, and checking out.
+
+18 products across suits, sherwanis, dresses, outerwear, sarees, and accessories. All tailored in Delhi and delivered across India in seven days.
+
+## Tech stack
+
+| Layer | Choice |
+|---|---|
+| Framework | Next.js 16.2 (App Router) |
+| UI | React 19, pure CSS (no UI library) |
+| Styling | Custom design system (`disturbia.css`) |
+| Images | Next.js `<Image>` with WebP assets |
+| Deployment | Vercel (auto-deploy on push to `master`) |
+| Language | TypeScript |
+
+## Project structure
+
+```
+app/
+  components/       # Shared components (Header, Footer, HeroBanner, ProductCard…)
+  page.tsx          # Homepage
+  collection/       # Collection listing page
+  products/[slug]/  # Product detail page
+  bespoke/          # Bespoke booking page
+  cart/             # Cart page
+  disturbia.css     # Full design system
+lib/
+  products.ts       # Product catalogue (18 products)
+public/
+  generated/        # Product images (5 angles per product) + section images
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Key features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- 3-slide auto-scrolling hero banner with prev/next arrows
+- Horizontal announce bar ticker (pause on hover)
+- Mega menu navigation with hover bridge
+- Product cards with hover alt-image and SALE badge
+- Strikethrough sale pricing on product detail pages
+- Bespoke appointment booking form
+- Promo modal (50% OFF)
+- Women's Collection full-width editorial banner
+- Responsive across desktop, tablet, and mobile
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Getting started
 
-## Learn More
+```bash
+npm install
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Open [http://localhost:3000](http://localhost:3000).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Deployment
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Connected to Vercel via GitHub integration. Every push to `master` auto-deploys to production.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+git push origin master
+```
