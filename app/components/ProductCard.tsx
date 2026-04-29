@@ -23,13 +23,20 @@ export default function ProductCard({ p, priority = false }: { p: Product; prior
           sizes="(max-width: 720px) 50vw, (max-width: 1024px) 33vw, 25vw"
           loading="lazy"
         />
-        {p.badge && <span className="badge t-mono-xs">{p.badge}</span>}
+        {p.badge && p.badge !== "Sale" && <span className="badge badge-new t-mono-xs">{p.badge}</span>}
         {p.salePrice && <span className="badge badge-sale t-mono-xs">Sale</span>}
       </div>
       <div className="meta">
         <h3 className="name">{p.name}</h3>
         <div className="row">
-          <span className="price">{fmtINR(p.price)}</span>
+          {p.salePrice ? (
+            <span className="price-group">
+              <span className="price price-sale">{fmtINR(p.salePrice)}</span>
+              <span className="price price-orig">{fmtINR(p.price)}</span>
+            </span>
+          ) : (
+            <span className="price">{fmtINR(p.price)}</span>
+          )}
           <span className="tag">{p.fabric} · {p.fit}</span>
         </div>
       </div>

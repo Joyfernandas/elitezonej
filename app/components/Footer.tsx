@@ -76,7 +76,7 @@ export default function Footer({ minimal = false }: { minimal?: boolean }) {
       <footer className="site site--minimal">
         <div className="foot-bottom-min">
           <Link href="/" className="foot-logo-link">
-            <Image src="/logo/wordmark-trimmed.png" alt="Elite Zone J" width={892} height={116} style={{ height: "26px", width: "auto", display: "block" }} />
+            <Image src="/logo/lockup-trimmed.png" alt="Elite Zone J" width={860} height={227} style={{ height: "26px", width: "auto", display: "block" }} />
           </Link>
           <span>© 2026 Elite Zone J</span>
           <span>Visa · Mastercard · UPI · Net Banking · COD</span>
@@ -112,10 +112,10 @@ export default function Footer({ minimal = false }: { minimal?: boolean }) {
           <div className="foot-col foot-col-center">
             <Link href="/" className="foot-logo-link">
               <Image
-                src="/logo/wordmark-trimmed.png"
+                src="/logo/lockup-trimmed.png"
                 alt="Elite Zone J"
-                width={892}
-                height={116}
+                width={860}
+                height={227}
                 style={{ height: "44px", width: "auto", display: "block" }}
               />
             </Link>

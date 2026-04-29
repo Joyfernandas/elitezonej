@@ -55,6 +55,7 @@ export const PRODUCTS: Product[] = [
     cat: "Suits · Two-Piece",
     catLink: "Men",
     price: 48000,
+    salePrice: 36000,
     line: "A modern two-piece in fine Italian wool — the boardroom and the dinner table, in one suit.",
     sizes: ["36", "38-oos", "40", "42", "44", "46"],
     features: [
@@ -70,7 +71,7 @@ export const PRODUCTS: Product[] = [
       ["Closure", "Two-button, side vents"], ["Made in", "Delhi, India"],
     ],
     note: "Navy is the most-worn colour in our showroom. We made this one slimmer through the chest and waist than our heritage cut — built for younger professionals who wear a suit four days a week.",
-    fit: "Slim", fabric: "Wool", occasion: "Boardroom", badge: null,
+    fit: "Slim", fabric: "Wool", occasion: "Boardroom", badge: "Sale",
     gender: "men", category: "suits", sub: "business-suits",
   },
   {
@@ -103,6 +104,7 @@ export const PRODUCTS: Product[] = [
     cat: "Sherwani · Festive",
     catLink: "Men",
     price: 38500,
+    salePrice: 28900,
     line: "Ivory raw silk with hand-worked zardozi — the sherwani for the front row at the family wedding.",
     sizes: ["36", "38", "40", "42", "44", "46"],
     features: [
@@ -118,7 +120,7 @@ export const PRODUCTS: Product[] = [
       ["Made in", "Lucknow & Delhi, India"],
     ],
     note: "The zardozi on this piece is done by a karkhana in old Lucknow; the work takes seventeen days. We shortened the length from our heritage cut by two inches — the proportion sits better on a 5'10\" frame.",
-    fit: "Tailored", fabric: "Silk", occasion: "Festive", badge: null,
+    fit: "Tailored", fabric: "Silk", occasion: "Festive", badge: "Sale",
     gender: "men", category: "sherwani", sub: "wedding-suits",
   },
   {
@@ -200,6 +202,7 @@ export const PRODUCTS: Product[] = [
     cat: "Women · Eveningwear",
     catLink: "Women",
     price: 22500,
+    salePrice: 16800,
     line: "Bias-cut silk, midnight black — the dress that lets the wearer be the loudest thing in the room.",
     sizes: ["XS", "S", "M", "L", "XL", "XXL"],
     features: [
@@ -215,7 +218,7 @@ export const PRODUCTS: Product[] = [
       ["Made in", "Delhi, India"],
     ],
     note: "A bias-cut silk dress is the hardest thing in fashion to make properly — the cloth has to relax for forty-eight hours after cutting before we sew.",
-    fit: "Slim", fabric: "Silk", occasion: "Black Tie", badge: null,
+    fit: "Slim", fabric: "Silk", occasion: "Black Tie", badge: "Sale",
     gender: "women", category: "dresses", sub: "evening-gowns",
   },
   {
@@ -248,6 +251,7 @@ export const PRODUCTS: Product[] = [
     cat: "Women · Eveningwear",
     catLink: "Women",
     price: 32800,
+    salePrice: 24600,
     line: "Burgundy velvet, single-breasted, mid-thigh — the blazer dress for evenings that go late.",
     sizes: ["XS", "S", "M", "L-oos", "XL", "XXL"],
     features: [
@@ -263,7 +267,7 @@ export const PRODUCTS: Product[] = [
       ["Made in", "Delhi, India"],
     ],
     note: "Velvet draws light differently from wool, so we cut the lapel at a deeper angle — you read the silhouette before you read the cloth.",
-    fit: "Tailored", fabric: "Velvet", occasion: "Black Tie", badge: null,
+    fit: "Tailored", fabric: "Velvet", occasion: "Black Tie", badge: "Sale",
     gender: "women", category: "dresses", sub: "evening-gowns",
   },
   {
@@ -321,6 +325,7 @@ export const PRODUCTS: Product[] = [
     cat: "Men · Pants",
     catLink: "Men",
     price: 8400,
+    salePrice: 5900,
     line: "Charcoal Italian wool, flat-front, slim through the leg — the trouser to wear with everything.",
     sizes: ["28","30","32","34","36","38"],
     features: [
@@ -335,7 +340,7 @@ export const PRODUCTS: Product[] = [
       ["Adjusters","Side adjusters, no belt loops"], ["Made in","Delhi, India"],
     ],
     note: "The hardest thing in trouser-making is the line from knee to ankle. We pin and re-pin three times before we cut. Worn with sneakers, oxfords, or loafers — these work for the next ten years.",
-    fit: "Tailored", fabric: "Wool", occasion: "Boardroom", badge: null,
+    fit: "Tailored", fabric: "Wool", occasion: "Boardroom", badge: "Sale",
     gender: "men", category: "pants", sub: "tapered-pants",
   },
   {

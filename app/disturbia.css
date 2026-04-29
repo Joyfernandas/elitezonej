@@ -940,11 +940,10 @@ input:focus, select:focus, textarea:focus { border-color: var(--ink); }
 .carousel-heading h2 {
   font-family: var(--font-display);
   font-weight: 400;
-  font-style: italic;
-  font-size: clamp(28px, 2.8vw, 48px);
-  letter-spacing: -0.01em;
-  line-height: 1.1;
-  text-transform: none;
+  font-size: 28px;
+  letter-spacing: 0.18em;
+  line-height: 1.2;
+  text-transform: uppercase;
   color: var(--ink); margin: 0;
 }
 /* Layout only — color/background/hover handled above by the
@@ -1010,12 +1009,15 @@ input:focus, select:focus, textarea:focus { border-color: var(--ink); }
 .pcard .row { justify-content: center; gap: 8px; margin-top: 4px; }
 .pcard .price {
   font-family: var(--font-body) !important;
-  font-size: 14px !important;                               /* +3px over Disturbia */
+  font-size: 14px !important;
   font-weight: 500 !important;
-  color: var(--ink) !important;                             /* full ink, not muted — more prominent */
+  color: var(--ink) !important;
   letter-spacing: 0.1em !important;
-  text-transform: none;                                     /* drop uppercase — easier to read prices */
+  text-transform: none;
 }
+.pcard .price-group { display: inline-flex; align-items: baseline; gap: 6px; }
+.pcard .price-sale { color: var(--sale) !important; }
+.pcard .price-orig { color: var(--ink-3) !important; font-weight: 400 !important; text-decoration: line-through !important; font-size: 12px !important; }
 .pcard .tag { display: none; }
 .pcard .badge {
   background: #ffffff !important;
@@ -1032,6 +1034,19 @@ input:focus, select:focus, textarea:focus { border-color: var(--ink); }
   background: var(--sale) !important;
   color: #ffffff !important;
   border-color: var(--sale);
+}
+/* NEW / label tag — top-left corner */
+.pcard .badge-new {
+  position: absolute;
+  top: var(--s-3);
+  left: var(--s-3);
+  background: #ffffff !important;
+  color: var(--ink) !important;
+  border: 1px solid var(--paper-3) !important;
+  padding: 2px 6px !important;
+  font-size: 10px !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase;
 }
 /* SALE tag — top-right corner */
 .pcard .badge-sale {

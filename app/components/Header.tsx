@@ -71,10 +71,10 @@ export default function Header() {
         <div className="brand">
           <Link href="/" className="brand-logo-link">
             <Image
-              src="/logo/lockup-trimmed.png"
+              src="/logo/wordmark-trimmed.png"
               alt="Elite Zone J"
-              width={860}
-              height={227}
+              width={892}
+              height={116}
               priority
               style={{ height: "clamp(32px, 3.8vw, 52px)", width: "auto", display: "block" }}
             />
