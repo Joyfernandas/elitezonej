@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "./disturbia.css";
+import "./styles/page-chrome.css";
+import { CartProvider } from "./components/CartProvider";
+import { WishlistProvider } from "./components/WishlistProvider";
+import HeaderScrollHook from "./components/HeaderScrollHook";
+import LoadingCurtain from "./components/LoadingCurtain";
+import Toast from "./components/Toast";
+import BackToTop from "./components/BackToTop";
 
 const SITE_URL = "https://elitezonej.com";
 
@@ -72,7 +79,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <LoadingCurtain />
+        <HeaderScrollHook />
+        <WishlistProvider>
+          <CartProvider>
+            {children}
+            <Toast />
+            <BackToTop />
+          </CartProvider>
+        </WishlistProvider>
+      </body>
     </html>
   );
 }

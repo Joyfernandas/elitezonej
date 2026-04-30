@@ -16,13 +16,17 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   if (!product) notFound();
 
   // Schema.org Product structured data — eligible for rich results in
-  // Google search (price, availability, ratings).
+  // Google search (price, availability, ratings). Fabrics don't have
+  // per-slug photography, so fall back to the cloth library image.
+  const ldImage = product.kind === "fabric"
+    ? ["/generated/_sections/process-cloth.webp"]
+    : [`/generated/${slug}/01-front.webp`, `/generated/${slug}/02-overview.webp`];
   const ld = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.name,
-    image: [`/generated/${slug}/01-front.webp`, `/generated/${slug}/02-overview.webp`],
-    description: product.line,
+    image: ldImage,
+    description: product.description ?? product.line,
     brand: { "@type": "Brand", name: "Elite Zone J" },
     offers: {
       "@type": "Offer",

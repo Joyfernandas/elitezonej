@@ -2,6 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 import MobileNav from "./MobileNav";
 import CartDrawer from "./CartDrawer";
+import SearchToggle from "./SearchToggle";
+import WishlistHeaderLink from "./WishlistHeaderLink";
 
 // Filled-outline icons in the FontAwesome Pro Light visual family —
 // the same icon set Disturbia uses on its header. These are common
@@ -82,14 +84,9 @@ export default function Header() {
         </div>
 
         <div className="header-right">
-          <button className="icon-btn" aria-label="Search">
-            <SearchIcon />
-            <span className="icon-label">Search</span>
-          </button>
-          <Link href="/bespoke" className="icon-btn" aria-label="Wishlist">
-            <WishlistIcon />
-          </Link>
-          <CartDrawer count={2} />
+          <SearchToggle />
+          <WishlistHeaderLink />
+          <CartDrawer />
         </div>
       </div>
 

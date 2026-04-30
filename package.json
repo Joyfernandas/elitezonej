@@ -10,6 +10,7 @@
     "trace:button": "node scripts/disturbia-button-trace.mjs",
     "gen:images": "node scripts/generate-product-images.mjs",
     "gen:sections": "node scripts/generate-section-images.mjs",
+    "gen:fabrics": "node scripts/generate-fabric-images.mjs",
     "images:compress": "node scripts/compress-images.mjs"
   },
   "dependencies": {

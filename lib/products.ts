@@ -1,8 +1,19 @@
+export type FabricColour = { name: string; hex: string };
+
+export type FabricMeta = {
+  widthInches: number;
+  gsm: number;
+  composition: string;
+  care: string;
+  origin: string;
+  stockMeters: number;
+};
+
 export type Product = {
   slug: string;
   name: string;
   cat: string;        // breadcrumb-style "Category · Subcategory"
-  catLink: "Men" | "Women";
+  catLink: "Men" | "Women" | "Fabrics";
   price: number;
   salePrice?: number;
   line: string;       // editorial one-liner
@@ -14,9 +25,17 @@ export type Product = {
   fabric: string;
   occasion: string;
   badge: string | null;
-  gender: "men" | "women";
+  gender: "men" | "women" | "unisex";
   category: string;
   sub?: string;
+  // Fabric-only fields. Set kind:"fabric" to opt this row into the
+  // fabric listing/PDP layout (no filters, meter selector, swatches).
+  kind?: "fabric";
+  description?: string;
+  colour?: string;
+  colourHex?: string;
+  colourVariants?: FabricColour[];
+  fabricMeta?: FabricMeta;
 };
 
 export const PRODUCTS: Product[] = [
@@ -512,17 +531,113 @@ export const PRODUCTS: Product[] = [
     fit: "Tailored", fabric: "Cotton", occasion: "Casual", badge: "New",
     gender: "women", category: "accessories", sub: "belts",
   },
-];
 
-export const ANGLES = ["01-front", "02-overview", "03-side", "04-back", "05-detail"] as const;
-export const ANGLE_LABELS = ["Front", "Overview", "Side", "Back", "Detail"] as const;
+  // ── Fabrics · sold by the metre ──
+  {
+    slug: "fabric-italian-wool-super-120s",
+    name: "Italian Wool · Super 120s",
+    cat: "Fabrics · Suiting",
+    catLink: "Fabrics",
+    price: 3500,
+    line: "Vitale Barberis Canonico, 280 gsm — the cloth our heritage three-piece is built on.",
+    sizes: [], features: [], spec: [], note: "",
+    fit: "—", fabric: "Wool", occasion: "—", badge: null,
+    gender: "unisex", category: "fabrics",
+    kind: "fabric",
+    description:
+      "Pure Super 120s wool, 280 gsm, woven by Vitale Barberis Canonico in Biella. Soft hand, deep drape, and enough body to hold a pressed crease through eight hours on the body. Sold by the metre, cut from a single piece. Ships unfinished from our Delhi cloth library.",
+    colour: "Charcoal",
+    colourHex: "#2E2A26",
+    colourVariants: [
+      { name: "Charcoal", hex: "#2E2A26" },
+      { name: "Navy",     hex: "#1A2333" },
+      { name: "Stone",    hex: "#82776A" },
+      { name: "Bone",     hex: "#D8CFC2" },
+    ],
+    fabricMeta: {
+      widthInches: 60, gsm: 280, composition: "100% Super 120s Wool",
+      care: "Dry clean only · Steam between wears",
+      origin: "Vitale Barberis Canonico · Biella, Italy",
+      stockMeters: 42,
+    },
+  },
+  {
+    slug: "fabric-egyptian-poplin",
+    name: "Egyptian Cotton Poplin",
+    cat: "Fabrics · Shirting",
+    catLink: "Fabrics",
+    price: 1200,
+    line: "Thomas Mason 100s 2-ply poplin — the shirting cloth at its purest.",
+    sizes: [], features: [], spec: [], note: "",
+    fit: "—", fabric: "Cotton", occasion: "—", badge: null,
+    gender: "unisex", category: "fabrics",
+    kind: "fabric",
+    description:
+      "Thomas Mason 100s two-ply Egyptian cotton, woven in Italy. A clean, dense poplin that softens after six washes and reaches its best at fifty. Recommend 2.4m for a long-sleeve shirt with single cuffs.",
+    colour: "Ivory",
+    colourHex: "#EFE7D7",
+    fabricMeta: {
+      widthInches: 58, gsm: 110, composition: "100% Egyptian Cotton, 100s 2-ply",
+      care: "Machine wash cold · Iron when damp",
+      origin: "Thomas Mason · Olgiate Comasco, Italy",
+      stockMeters: 36,
+    },
+  },
+  {
+    slug: "fabric-raw-silk-handwoven",
+    name: "Raw Silk · Hand-Woven",
+    cat: "Fabrics · Festive",
+    catLink: "Fabrics",
+    price: 2800,
+    line: "Hand-woven raw silk from Varanasi — for sherwanis, lehengas, and saree blouses.",
+    sizes: [], features: [], spec: [], note: "",
+    fit: "—", fabric: "Silk", occasion: "—", badge: "New",
+    gender: "unisex", category: "fabrics",
+    kind: "fabric",
+    description:
+      "Hand-woven raw silk from a single karkhana in Varanasi. Subtle slub texture across the weave, a soft natural sheen, and a weight that drapes without flattening. Three-week turnaround if dyed to a custom colour.",
+    colour: "Wine",
+    colourHex: "#5C1B25",
+    colourVariants: [
+      { name: "Wine",    hex: "#5C1B25" },
+      { name: "Ivory",   hex: "#EBE2D2" },
+      { name: "Emerald", hex: "#1F4938" },
+    ],
+    fabricMeta: {
+      widthInches: 44, gsm: 95, composition: "100% Raw Silk, hand-woven",
+      care: "Dry clean only · Store flat, away from light",
+      origin: "Varanasi, Uttar Pradesh, India",
+      stockMeters: 24,
+    },
+  },
+  {
+    slug: "fabric-heavy-linen",
+    name: "Indian Linen · Heavy",
+    cat: "Fabrics · Summer Suiting",
+    catLink: "Fabrics",
+    price: 1800,
+    line: "Heavy Indian linen, 280 gsm — bandhgalas, easy trousers, weekend jackets.",
+    sizes: [], features: [], spec: [], note: "",
+    fit: "—", fabric: "Linen", occasion: "—", badge: null,
+    gender: "unisex", category: "fabrics",
+    kind: "fabric",
+    description:
+      "Heavy-weight Indian linen at 280 gsm — substantial enough for a structured bandhgala, soft enough for a relaxed summer trouser. Creases gracefully along the elbow and inner thigh; steam between wears.",
+    colour: "Sand",
+    colourHex: "#C9B79A",
+    colourVariants: [
+      { name: "Sand",  hex: "#C9B79A" },
+      { name: "Slate", hex: "#5A6068" },
+    ],
+    fabricMeta: {
+      widthInches: 58, gsm: 280, composition: "100% Indian Linen, heavyweight",
+      care: "Hand wash cool · Steam between wears, do not iron",
+      origin: "Kerala, India",
+      stockMeters: 31,
+    },
+  },
+];
 
 export function getProduct(slug: string): Product | undefined {
   return PRODUCTS.find(p => p.slug === slug);
-}
-export function imgSrc(slug: string, angle: typeof ANGLES[number]) {
-  return `/generated/${slug}/${angle}.webp`;
-}
-export function fmtINR(n: number) {
-  return "₹" + n.toLocaleString("en-IN");
 }

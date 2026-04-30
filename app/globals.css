@@ -278,3 +278,146 @@ section.page { padding-top: var(--pad-y-d); padding-bottom: var(--pad-y-d); }
 @media (max-width: 1100px) { .mega { min-width: 600px; } .mega .row { grid-template-columns: repeat(2, 1fr); gap: var(--s-5); } }
 @media (max-width: 900px)  { .nav-primary li.has-mega .mega { display: none; } /* mobile collapses to category page */ }
 
+/* =============================================================
+   Wishlist heart + Quick-add button (used across product cards)
+   ============================================================= */
+.wl-btn {
+  background: rgba(250, 247, 242, 0.92);
+  border: 1px solid rgba(26, 22, 19, 0.08);
+  color: var(--ink);
+  cursor: pointer;
+  padding: 0;
+  display: inline-flex;
+  align-items: center; justify-content: center;
+  border-radius: 999px;
+  transition: background 200ms var(--ease), color 200ms var(--ease), transform 200ms var(--ease), border-color 200ms var(--ease);
+}
+.wl-sm { width: 32px; height: 32px; }
+.wl-md { width: 42px; height: 42px; }
+.wl-btn:hover { background: var(--paper); transform: scale(1.06); }
+.wl-btn.on { color: var(--accent); border-color: rgba(106, 26, 32, 0.18); }
+.wl-btn.on svg { fill: var(--accent); }
+.wl-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.wl-overlay {
+  position: absolute;
+  top: 10px; right: 10px;
+  z-index: 4;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+/* Quick-add: overlay variant slides up from bottom of image on hover.
+   Inline variant sits in the meta row below the image. */
+.qa-btn {
+  display: inline-flex;
+  align-items: center; justify-content: center;
+  gap: 6px;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 11.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 11px 18px;
+  background: var(--ink);
+  color: var(--paper);
+  border: 1px solid var(--ink);
+  transition: background 200ms var(--ease), color 200ms var(--ease), border-color 200ms var(--ease), transform 200ms var(--ease);
+}
+.qa-btn:hover { background: var(--accent); border-color: var(--accent); color: var(--paper); }
+.qa-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.qa-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.qa-overlay {
+  position: absolute;
+  left: 10px; right: 10px; bottom: 10px;
+  z-index: 4;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 250ms var(--ease), transform 250ms var(--ease);
+  pointer-events: none;
+}
+.qa-host:hover .qa-overlay,
+.qa-host:focus-within .qa-overlay { opacity: 1; transform: translateY(0); pointer-events: auto; }
+
+/* Inline size strip when the user clicks Quick add on a tailored card */
+.qa-sizes {
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  padding: 8px 8px 8px 14px;
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em;
+  color: var(--ink);
+}
+.qa-sizes.qa-overlay {
+  position: absolute;
+  left: 10px; right: 10px; bottom: 10px;
+  z-index: 5;
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+.qa-sizes .qa-label { color: var(--ink-3); flex: 0 0 auto; }
+.qa-size-row { display: flex; gap: 4px; flex-wrap: wrap; flex: 1; min-width: 0; }
+.qa-size {
+  background: transparent;
+  border: 1px solid var(--paper-3);
+  color: var(--ink);
+  padding: 6px 10px;
+  font-family: var(--font-mono); font-size: 11px; cursor: pointer;
+  transition: background 150ms var(--ease), color 150ms var(--ease), border-color 150ms var(--ease);
+}
+.qa-size:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.qa-size.oos { color: var(--ink-3); border-style: dashed; cursor: not-allowed; text-decoration: line-through; }
+.qa-size:disabled:hover { background: transparent; color: var(--ink-3); }
+.qa-close {
+  flex: 0 0 auto;
+  background: transparent; border: 0;
+  color: var(--ink-3); font-size: 18px; line-height: 1;
+  cursor: pointer; padding: 0 4px;
+}
+.qa-close:hover { color: var(--ink); }
+
+/* Mobile: Quick-add is always visible (no hover) and sits below the image */
+@media (max-width: 720px) {
+  .qa-overlay {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+    /* Slightly smaller padding on mobile */
+    padding: 10px 14px;
+    font-size: 11px;
+  }
+  .wl-overlay { top: 8px; right: 8px; }
+  .wl-sm { width: 36px; height: 36px; } /* bigger tap target */
+}
+
+/* PDP title row — product name + wishlist heart on the same line */
+.title-row { display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); }
+.title-row h1 { flex: 1; min-width: 0; }
+
+/* When ProductCard wraps the image in a <Link>, that <a> is the
+   <Image fill>'s immediate parent — make it block + relative so
+   next/image can position correctly. */
+.pcard .plate > a,
+.fabric-card .swatch > a,
+.wl-card .plate > a,
+.search-card-img > a { display: block; position: relative; width: 100%; height: 100%; }
+
+/* =============================================================
+   Header utility-icon count badge (wishlist + bag)
+   ============================================================= */
+.icon-btn { position: relative; }
+.icon-btn .util-count {
+  position: absolute;
+  top: -2px; right: -8px;
+  min-width: 18px; height: 18px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 9.5px; font-weight: 500; letter-spacing: 0.04em;
+  display: inline-flex; align-items: center; justify-content: center;
+  pointer-events: none;
+}
+

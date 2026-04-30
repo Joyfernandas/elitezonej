@@ -2,59 +2,15 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { PRODUCTS, fmtINR } from "@/lib/products";
+import { PRODUCTS } from "@/lib/products";
+import { fmtINR } from "@/lib/format";
+import { imgFabric } from "@/lib/images";
 import { CAT_DATA, SUBCATS } from "@/lib/subcats";
+import WishlistButton from "../components/WishlistButton";
+import QuickAddButton from "../components/QuickAddButton";
+import Reveal from "../components/Reveal";
+import "../styles/collection.css";
 
-const CSS = `
-.cat-header { max-width:var(--container); margin:0 auto; padding:var(--s-7) var(--pad-x-d) var(--s-5); border-bottom:var(--rule-strong); }
-.cat-header .crumb { color:var(--ink-3); margin-bottom:var(--s-4); display:flex; gap:var(--s-3); }
-.cat-header .crumb .sep { color:var(--ink-4); }
-.cat-header h1 { margin:0 0 var(--s-4); font-family:var(--font-display); font-weight:500; font-size:clamp(36px,4.5vw,60px); line-height:1; letter-spacing:-.02em; }
-.cat-header .standfirst { max-width:680px; color:var(--ink-2); font-family:var(--font-display); font-style:italic; font-weight:500; font-size:18px; line-height:1.5; margin:0 0 var(--s-4); }
-.cat-header .signed { color:var(--ink-3); }
-.toolbar { max-width:var(--container); margin:0 auto; padding:var(--s-4) var(--pad-x-d); display:flex; justify-content:space-between; align-items:center; gap:var(--s-4); border-bottom:var(--rule); flex-wrap:wrap; }
-.toolbar .count { color:var(--ink-3); }
-.toolbar .sort { display:flex; align-items:center; gap:var(--s-3); }
-.toolbar .sort label { margin:0; }
-.toolbar select { width:auto; min-width:140px; padding:8px 12px; border:1px solid var(--paper-3); background:var(--paper); font-family:var(--font-mono); font-size:11px; letter-spacing:.06em; color:var(--ink); }
-.plp { max-width:var(--container); margin:0 auto; padding:var(--s-5) var(--pad-x-d) var(--s-9); display:grid; grid-template-columns:240px 1fr; gap:var(--s-7); align-items:start; }
-@media (max-width:900px) { .plp { grid-template-columns:1fr; gap:var(--s-5); } .cat-header { padding:var(--s-5) var(--pad-x-m) var(--s-4); } .toolbar { padding:var(--s-4) var(--pad-x-m); } .plp { padding:var(--s-5) var(--pad-x-m) var(--s-9); } }
-.filters { position:sticky; top:104px; align-self:start; }
-.filter-group { padding:var(--s-4) 0; border-bottom:var(--rule); }
-.filter-group:first-child { padding-top:0; }
-.filter-group h4 { margin:0 0 var(--s-3); font-family:var(--font-mono); font-weight:500; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--ink); }
-.filter-chips { display:flex; flex-wrap:wrap; gap:6px; }
-.filter-chips button { background:transparent; border:1px solid var(--paper-3); color:var(--ink-2); padding:6px 10px; font-family:var(--font-mono); font-size:11px; letter-spacing:.04em; cursor:pointer; transition:all var(--d-fast) var(--ease); }
-.filter-chips button:hover { border-color:var(--ink); color:var(--ink); }
-.filter-chips button.on { background:var(--ink); color:var(--paper); border-color:var(--ink); }
-.price-row { display:flex; gap:var(--s-2); }
-.price-row input { font-family:var(--font-mono); font-size:12px; padding:8px 10px; }
-.clear-link { display:inline-block; margin-top:var(--s-3); color:var(--ink-2); font-size:13px; text-decoration:underline; text-underline-offset:3px; cursor:pointer; }
-.clear-link:hover { color:var(--accent); }
-@media (max-width:900px) { .filters { position:static; padding-bottom:var(--s-5); border-bottom:var(--rule); } }
-@media (max-width:375px) { .cat-header { padding:var(--s-4) var(--s-3) var(--s-3); } .cat-header h1 { font-size:28px; } .cat-header .standfirst { font-size:15px; } .toolbar { padding:var(--s-3) var(--s-3); } .plp { padding:var(--s-4) var(--s-3) var(--s-7); } }
-.grid { display:grid; grid-template-columns:repeat(3,1fr); gap:var(--s-5); }
-@media (max-width:900px) { .grid { grid-template-columns:repeat(2,1fr); gap:var(--s-3); } }
-@media (max-width:520px) { .grid { grid-template-columns:1fr; } }
-.pcard { display:flex; flex-direction:column; cursor:pointer; color:inherit; text-decoration:none; }
-.pcard .plate { aspect-ratio:3/4; position:relative; overflow:hidden; background:var(--paper-2); }
-.pcard .plate img { object-fit:cover; transition:opacity var(--d-slow) var(--ease); }
-.pcard .plate img.alt { opacity:0; }
-.pcard:hover .plate img.primary { opacity:0; }
-.pcard:hover .plate img.alt { opacity:1; }
-.pcard .badge { position:absolute; top:var(--s-3); left:var(--s-3); color:var(--paper); z-index:2; background:rgba(26,22,19,.9); padding:4px 10px; }
-.pcard .meta { padding:var(--s-3) 0 var(--s-2); }
-.pcard .name { font-family:var(--font-display); font-weight:500; font-size:18px; letter-spacing:-.005em; color:var(--ink); margin:0 0 var(--s-2); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.pcard .row { display:flex; justify-content:space-between; align-items:baseline; gap:var(--s-3); }
-.pcard .price { font-family:var(--font-mono); font-weight:500; font-size:14px; color:var(--ink); letter-spacing:.02em; }
-.pcard .tag { color:var(--ink-3); font-family:var(--font-body); font-size:11px; letter-spacing:.06em; }
-.empty { grid-column:1/-1; padding:var(--s-9) var(--s-7); text-align:center; border:var(--rule); background:var(--paper-2); }
-.empty h3 { font-family:var(--font-display); font-weight:500; font-size:32px; letter-spacing:-.01em; margin:0 0 var(--s-4); line-height:1.1; }
-.empty p { max-width:480px; margin:0 auto var(--s-5); color:var(--ink-2); font-family:var(--font-display); font-style:italic; font-weight:500; font-size:18px; line-height:1.5; }
-.empty form { display:flex; gap:0; max-width:380px; margin:0 auto; border:1px solid var(--ink); }
-.empty form input { border:0; padding:12px 14px; flex:1; background:var(--paper); }
-.empty form button { border:0; }
-`;
 
 type FilterKey = "fit" | "fabric" | "occasion" | "size";
 
@@ -77,23 +33,32 @@ export default function CollectionClient({ cat, sub }: { cat: string; sub: strin
   };
   const clear = () => setActive({ fit: new Set(), fabric: new Set(), occasion: new Set(), size: new Set() });
 
+  const isFabricMode = cat === "fabrics";
+
   const filtered = useMemo(() => {
     let list = PRODUCTS.slice();
-    if (cat === "men" || cat === "women") list = list.filter(p => p.gender === cat);
-    else if (cat === "festive") list = list.filter(p => p.occasion === "Festive");
-    else if (cat !== "all") list = list.filter(p => p.category === cat);
+    if (isFabricMode) {
+      list = list.filter(p => p.kind === "fabric");
+    } else {
+      list = list.filter(p => p.kind !== "fabric");
+      if (cat === "men" || cat === "women") list = list.filter(p => p.gender === cat);
+      else if (cat === "festive") list = list.filter(p => p.occasion === "Festive");
+      else if (cat === "new") list = list.filter(p => p.badge === "New");
+      else if (cat !== "all") list = list.filter(p => p.category === cat);
+    }
     if (sub) list = list.filter(p => p.sub === sub);
-    if (active.fit.size) list = list.filter(p => active.fit.has(p.fit));
-    if (active.fabric.size) list = list.filter(p => active.fabric.has(p.fabric));
-    if (active.occasion.size) list = list.filter(p => active.occasion.has(p.occasion));
+    if (!isFabricMode) {
+      if (active.fit.size) list = list.filter(p => active.fit.has(p.fit));
+      if (active.fabric.size) list = list.filter(p => active.fabric.has(p.fabric));
+      if (active.occasion.size) list = list.filter(p => active.occasion.has(p.occasion));
+    }
     if (sortKey === "price-asc") list = [...list].sort((a, b) => a.price - b.price);
     if (sortKey === "price-desc") list = [...list].sort((a, b) => b.price - a.price);
     return list;
-  }, [cat, sub, active, sortKey]);
+  }, [cat, sub, active, sortKey, isFabricMode]);
 
   return (
     <>
-      <style dangerouslySetInnerHTML={{ __html: CSS }} />
       <section className="cat-header">
         <div className="crumb t-mono-xs">
           <Link href="/">Home</Link>
@@ -125,22 +90,23 @@ export default function CollectionClient({ cat, sub }: { cat: string; sub: strin
         </div>
       </div>
 
-      <section className="plp">
-        <aside className="filters">
-          {(["Slim","Tailored","Regular","Relaxed"]).map(group => null) /* placeholder */}
-          <FilterGroup name="Fit" values={["Slim","Tailored","Regular","Relaxed"]} active={active.fit} onToggle={v => toggle("fit", v)} />
-          <FilterGroup name="Fabric" values={["Wool","Linen","Cotton","Silk","Velvet"]} active={active.fabric} onToggle={v => toggle("fabric", v)} />
-          <FilterGroup name="Occasion" values={["Wedding","Boardroom","Black Tie","Festive","Casual"]} active={active.occasion} onToggle={v => toggle("occasion", v)} />
-          <FilterGroup name="Size" values={["36","38","40","42","44","46","XS","S","M","L","XL","XXL"]} active={active.size} onToggle={v => toggle("size", v)} />
-          <div className="filter-group">
-            <h4>Price (₹)</h4>
-            <div className="price-row">
-              <input type="number" placeholder="Min" />
-              <input type="number" placeholder="Max" />
+      <section className={`plp${isFabricMode ? " plp-fabric" : ""}`}>
+        {!isFabricMode && (
+          <aside className="filters">
+            <FilterGroup name="Fit" values={["Slim","Tailored","Regular","Relaxed"]} active={active.fit} onToggle={v => toggle("fit", v)} />
+            <FilterGroup name="Fabric" values={["Wool","Linen","Cotton","Silk","Velvet"]} active={active.fabric} onToggle={v => toggle("fabric", v)} />
+            <FilterGroup name="Occasion" values={["Wedding","Boardroom","Black Tie","Festive","Casual"]} active={active.occasion} onToggle={v => toggle("occasion", v)} />
+            <FilterGroup name="Size" values={["36","38","40","42","44","46","XS","S","M","L","XL","XXL"]} active={active.size} onToggle={v => toggle("size", v)} />
+            <div className="filter-group">
+              <h4>Price (₹)</h4>
+              <div className="price-row">
+                <input type="number" placeholder="Min" />
+                <input type="number" placeholder="Max" />
+              </div>
             </div>
-          </div>
-          <a className="clear-link" onClick={clear}>Clear all filters</a>
-        </aside>
+            <a className="clear-link" onClick={clear}>Clear all filters</a>
+          </aside>
+        )}
 
         <div className="grid">
           {filtered.length === 0 ? (
@@ -158,22 +124,61 @@ export default function CollectionClient({ cat, sub }: { cat: string; sub: strin
                 </Link>
               </div>
             </div>
-          ) : (
-            filtered.map(p => (
-              <Link key={p.slug} className="pcard" href={`/products/${p.slug}`}>
-                <div className="plate">
-                  <Image className="primary" src={`/generated/${p.slug}/01-front.webp`} alt={`${p.name} front`} fill sizes="(max-width: 720px) 50vw, 33vw" loading="lazy" />
-                  <Image className="alt" src={`/generated/${p.slug}/02-overview.webp`} alt={`${p.name} overview`} fill sizes="(max-width: 720px) 50vw, 33vw" loading="lazy" />
-                  {p.badge && <span className="badge t-mono-xs">{p.badge}</span>}
-                </div>
-                <div className="meta">
-                  <h3 className="name">{p.name}</h3>
-                  <div className="row">
-                    <span className="price">{fmtINR(p.price)}</span>
-                    <span className="tag">{p.fabric} · {p.fit}</span>
+          ) : isFabricMode ? (
+            filtered.map((p, i) => (
+              <Reveal as="div" key={p.slug} className="fabric-card qa-host" delay={(i % 4) as 0 | 1 | 2 | 3} aria-label={`${p.name} — ${p.colour}`}>
+                <Link href={`/products/${p.slug}`} aria-label={p.name}>
+                  <div className="swatch" style={{ backgroundColor: p.colourHex || "var(--paper-2)" }}>
+                    {p.colour && (
+                      <Image
+                        src={imgFabric(p.slug, p.colour, "front")}
+                        alt={`${p.name} — ${p.colour} texture`}
+                        fill
+                        sizes="(max-width: 720px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        loading="lazy"
+                      />
+                    )}
+                    <WishlistButton slug={p.slug} name={p.name} />
+                    <QuickAddButton product={p} />
                   </div>
+                </Link>
+                <Link href={`/products/${p.slug}`}>
+                  <h3>{p.name}</h3>
+                  <div className="col-row">
+                    <span className="col-dot" style={{ backgroundColor: p.colourHex || "transparent" }} aria-hidden="true" />
+                    <span>Colour · {p.colour}</span>
+                  </div>
+                  <p className="desc">{p.description}</p>
+                </Link>
+              </Reveal>
+            ))
+          ) : (
+            filtered.map((p, i) => (
+              <Reveal as="div" key={p.slug} className="pcard qa-host" delay={(i % 4) as 0 | 1 | 2 | 3}>
+                <div className="plate">
+                  <Link href={`/products/${p.slug}`} aria-label={p.name}>
+                    <Image className="primary" src={`/generated/${p.slug}/01-front.webp`} alt={`${p.name} front`} fill sizes="(max-width: 720px) 50vw, 33vw" loading="lazy" />
+                    <Image className="alt" src={`/generated/${p.slug}/02-overview.webp`} alt={`${p.name} overview`} fill sizes="(max-width: 720px) 50vw, 33vw" loading="lazy" />
+                  </Link>
+                  {(p.badge || p.salePrice) && (
+                    <div className="badge-stack">
+                      {p.salePrice && <span className="badge badge-sale t-mono-xs">Sale</span>}
+                      {p.badge && p.badge !== "Sale" && <span className="badge badge-new t-mono-xs">{p.badge}</span>}
+                    </div>
+                  )}
+                  <WishlistButton slug={p.slug} name={p.name} />
+                  <QuickAddButton product={p} />
                 </div>
-              </Link>
+                <Link href={`/products/${p.slug}`} className="meta-link">
+                  <div className="meta">
+                    <h3 className="name">{p.name}</h3>
+                    <div className="row">
+                      <span className="price">{fmtINR(p.price)}</span>
+                      <span className="tag">{p.fabric} · {p.fit}</span>
+                    </div>
+                  </div>
+                </Link>
+              </Reveal>
             ))
           )}
         </div>
