@@ -106,13 +106,10 @@ export default function Home() {
       <section className="process-strip" aria-label="How it's made">
         <div className="process-strip__head">
           <Reveal as="div" className="process-strip__lead">
-            <div className="process-strip__eyebrow">
-              <span className="process-strip__numeral">II.</span>
-              <span className="process-strip__label t-mono-xs">The making</span>
-            </div>
             <h2 className="process-strip__title">
               How it&apos;s <em>made</em>.
             </h2>
+            <p className="process-strip__kicker">By hand.</p>
             <span className="process-strip__rule" aria-hidden="true" />
           </Reveal>
           <span className="process-strip__hint t-mono-xs" aria-hidden="true">

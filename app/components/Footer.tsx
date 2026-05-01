@@ -47,17 +47,6 @@ function TikTokIcon() {
   );
 }
 
-// Payment method tiles — stylised monochrome cards that read as the
-// payment method without copying any brand's actual mark file. Each is
-// a small ink-on-paper rectangle with the method name in mono caps.
-function PaymentTile({ label }: { label: string }) {
-  return (
-    <span className="pay-tile" aria-label={label}>
-      <span>{label}</span>
-    </span>
-  );
-}
-
 function RatingBadge() {
   return (
     <div className="rating-badge">
@@ -150,26 +139,37 @@ export default function Footer({ minimal = false }: { minimal?: boolean }) {
           </FooterAccordion>
         </div>
 
-        <div className="foot-bottom">
-          <div className="foot-bottom__region">
-            <span className="foot-bottom__flag" aria-hidden="true">🇮🇳</span>
-            <span>India · INR ₹</span>
-            <span className="foot-bottom__chev" aria-hidden="true">▾</span>
+        {/* Mobile-only condensed strip — replaces the 3 stacked accordions
+            with a single editorial block: logo, inline middot links, social. */}
+        <div className="foot-mobile" aria-label="Footer">
+          <Link href="/" className="foot-mobile__logo" aria-label="Elite Zone J">
+            <Image
+              src="/logo/lockup-trimmed.png"
+              alt="Elite Zone J"
+              width={860}
+              height={227}
+              className="foot-mobile__logo-img"
+            />
+          </Link>
+          <ul className="foot-mobile__links">
+            <li><Link href="/bespoke">Contact</Link></li>
+            <li><Link href="/bespoke">About</Link></li>
+            <li><Link href="/cart">Size guide</Link></li>
+            <li><Link href="/cart">Returns</Link></li>
+            <li><Link href="/cart">Privacy</Link></li>
+          </ul>
+          <div className="foot-mobile__social" aria-label="Social media">
+            <a href="#" aria-label="Facebook" className="social-icon"><FacebookIcon /></a>
+            <a href="#" aria-label="X / Twitter" className="social-icon"><XIcon /></a>
+            <a href="#" aria-label="Instagram" className="social-icon"><InstagramIcon /></a>
+            <a href="#" aria-label="Pinterest" className="social-icon"><PinterestIcon /></a>
+            <a href="#" aria-label="TikTok" className="social-icon"><TikTokIcon /></a>
           </div>
+        </div>
 
+        <div className="foot-bottom">
           <div className="foot-bottom__copy">
             © 2026 Elite Zone J · All rights reserved
-          </div>
-
-          <div className="foot-bottom__pay" aria-label="Accepted payment methods">
-            <PaymentTile label="VISA" />
-            <PaymentTile label="MC" />
-            <PaymentTile label="AMEX" />
-            <PaymentTile label="UPI" />
-            <PaymentTile label="GPay" />
-            <PaymentTile label="PAYTM" />
-            <PaymentTile label="NB" />
-            <PaymentTile label="COD" />
           </div>
         </div>
       </footer>

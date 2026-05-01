@@ -2625,17 +2625,6 @@ section.page { padding-top: 64px; padding-bottom: 64px; }
     padding: 10px 14px !important;
   }
 
-  /* Footer payment tiles need finger-room when tapped */
-  .pay-tile { min-height: 28px; padding: 6px 10px; }
-
-  /* Region selector / language pickers in footer bottom */
-  .foot-bottom__region {
-    min-height: 44px;
-    padding: 8px 12px;
-    align-items: center;
-    display: inline-flex;
-    gap: 8px;
-  }
 }
 
 /* — Type / logo floors on mobile: avoid sub-12px caps and tiny logos — */
@@ -2654,7 +2643,6 @@ section.page { padding-top: 64px; padding-bottom: 64px; }
   .ix.t-mono-xs,
   .pcard .tag,
   .foot-bottom__copy,
-  .foot-bottom__region,
   .returns-line.t-mono-xs {
     font-size: clamp(12px, 3.2vw, 13px);
   }

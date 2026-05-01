@@ -835,57 +835,20 @@ footer.site.site--disturbia .foot-bottom {
   margin: clamp(40px, 5vw, 64px) auto 0;
   padding: var(--s-4) 0 0;
   border-top: var(--rule);
-  display: grid;
-  grid-template-columns: auto 1fr auto;
+  display: flex;
   align-items: center;
+  justify-content: center;
   gap: var(--s-4);
   font-family: var(--font-body);
   font-size: 12px;
   color: var(--ink-3);
 }
-.foot-bottom__region {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 14px;
-  border: 1px solid var(--paper-3);
-  cursor: pointer;
-  letter-spacing: 0.04em;
-  color: var(--ink-2);
-  font-size: 12px;
-  background: var(--paper);
-  transition: border-color 200ms, color 200ms;
-}
-.foot-bottom__region:hover { border-color: var(--ink); color: var(--ink); }
-.foot-bottom__flag { font-size: 14px; line-height: 1; }
-.foot-bottom__chev { color: var(--ink-3); font-size: 10px; margin-left: 2px; }
-.foot-bottom__copy { text-align: center; letter-spacing: 0.04em; }
+.foot-bottom__copy { letter-spacing: 0.04em; text-align: center; }
 
-.foot-bottom__pay {
-  display: inline-flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  justify-content: flex-end;
-}
-.pay-tile {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 38px;
-  height: 24px;
-  padding: 0 6px;
-  border: 1px solid var(--paper-3);
-  border-radius: 3px;
-  background: var(--paper);
-  font-family: var(--font-mono);
-  font-weight: 500;
-  font-size: 9.5px;
-  letter-spacing: 0.08em;
-  color: var(--ink-2);
-  text-transform: uppercase;
-  transition: border-color 200ms, color 200ms;
-}
-.pay-tile:hover { border-color: var(--ink); color: var(--ink); }
+/* Mobile condensed strip — replaces the 3-column accordion grid on phones.
+   A single editorial block: small logo, inline middot link list, social row.
+   Hidden on desktop (the grid above carries the load there). */
+.foot-mobile { display: none; }
 
 @media (max-width: 900px) {
   footer.site.site--disturbia { padding-left: var(--pad-x-m); padding-right: var(--pad-x-m); }
@@ -897,12 +860,11 @@ footer.site.site--disturbia .foot-bottom {
   footer.site.site--disturbia .foot-col-center { text-align: left; align-items: flex-start; }
   footer.site.site--disturbia .foot-col-center ul { align-items: flex-start; }
   footer.site.site--disturbia .foot-bottom {
-    grid-template-columns: 1fr;
+    flex-direction: column;
     text-align: left;
     gap: var(--s-3);
+    align-items: flex-start;
   }
-  .foot-bottom__copy { text-align: left; }
-  .foot-bottom__pay { justify-content: flex-start; }
 }
 
 /* ─────────────────────────────────────────────────────────────────────
@@ -938,140 +900,109 @@ details.foot-col-acc[open] > summary .foot-col-acc__chev { transform: rotate(180
   details.foot-col-acc.foot-col-center > .foot-logo-link { display: block !important; }
 }
 
-/* Phone: real accordion — editorial mobile footer */
+/* Phone: condensed single-strip footer.
+   The 3-column accordion grid is hidden; in its place a compact .foot-mobile
+   block renders the brand mark, a middot link rail, and a centred social row
+   — one editorial unit instead of stacked drawers. */
 @media (max-width: 720px) {
-  /* Tighter footer padding on phone */
   footer.site.site--disturbia {
-    padding: 40px 16px 20px !important;
-  }
-  /* Stack columns with zero gap so accordion bars stack edge-to-edge,
-     creating a clean continuous rule line down the section. */
-  footer.site.site--disturbia .foot-grid {
-    gap: 0 !important;
-  }
-  /* Override legacy .foot-col flex/center alignment so accordion bars
-     run full bleed and align left like a proper mobile menu. */
-  footer.site.site--disturbia .foot-col,
-  footer.site.site--disturbia details.foot-col-acc {
-    align-items: stretch !important;
-    text-align: left !important;
-    width: 100%;
+    padding: 36px 16px 22px !important;
   }
 
-  details.foot-col-acc > summary {
-    display: flex;
+  /* Hide the desktop 3-column grid (accordions) entirely on phone. */
+  footer.site.site--disturbia .foot-grid { display: none !important; }
+
+  /* Show + style the mobile-only condensed strip */
+  .foot-mobile {
+    display: flex !important;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    padding: 18px 2px;
-    min-height: 56px;
-    border-bottom: 1px solid var(--paper-3);
-    transition: padding 220ms cubic-bezier(.22, 1, .36, 1);
+    gap: 22px;
+    padding: 4px 0 6px;
+    text-align: center;
   }
-  details.foot-col-acc[open] > summary {
-    border-bottom-color: var(--accent);
+  .foot-mobile__logo {
+    display: block;
+    line-height: 0;
   }
-  details.foot-col-acc > summary h4 {
-    font-family: var(--font-display) !important;
-    font-weight: 500 !important;
-    font-size: 19px !important;
-    letter-spacing: -0.005em !important;
-    color: var(--ink) !important;
-    text-align: left !important;
-    text-transform: none !important;
-    margin: 0 !important;
+  .foot-mobile__logo-img {
+    height: 30px;
+    width: auto;
+    display: block;
   }
-  details.foot-col-acc[open] > summary h4 { color: var(--accent); }
-  .foot-col-acc__chev {
+
+  .foot-mobile__links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 4px 0;
+    column-gap: 0;
+  }
+  .foot-mobile__links li {
     display: inline-flex;
     align-items: center;
-    width: 22px;
-    height: 22px;
+    line-height: 1;
+  }
+  .foot-mobile__links li:not(:last-child)::after {
+    content: "·";
+    color: var(--ink-4);
+    margin: 0 12px;
+    font-size: 13px;
+    line-height: 1;
+  }
+  .foot-mobile__links a {
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--ink-2);
+    letter-spacing: 0.01em;
+    transition: color 200ms cubic-bezier(.22, 1, .36, 1);
+  }
+  .foot-mobile__links a:hover { color: var(--ink); }
+
+  .foot-mobile__social {
+    display: inline-flex;
+    gap: 10px;
+    margin-top: 2px;
+  }
+  .foot-mobile__social .social-icon {
+    display: inline-flex;
+    align-items: center;
     justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--paper-3);
+    border-radius: 999px;
+    color: var(--ink);
+    background: transparent;
+    transition:
+      background 220ms cubic-bezier(.22, 1, .36, 1),
+      color 220ms cubic-bezier(.22, 1, .36, 1),
+      border-color 220ms cubic-bezier(.22, 1, .36, 1),
+      transform 220ms cubic-bezier(.22, 1, .36, 1);
+  }
+  .foot-mobile__social .social-icon:active {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+    transform: translateY(-1px);
   }
 
-  /* Content rows when open */
-  details.foot-col-acc > ul {
-    padding: 14px 2px 22px !important;
-    gap: 14px !important;
-    align-items: flex-start !important;
-  }
-  details.foot-col-acc > ul li {
-    text-align: left !important;
-    width: auto !important;
-  }
-  details.foot-col-acc > ul a {
-    font-size: 14px !important;
-    color: var(--ink-2) !important;
-  }
-
-  /* Social row (Follow) when open */
-  details.foot-col-acc > .social-row {
-    padding: 16px 2px 12px !important;
-    gap: 10px !important;
-    justify-content: flex-start !important;
-  }
-  /* Rating badge (Follow) — sits below social icons, left-aligned */
-  details.foot-col-acc > .rating-badge {
-    padding: 6px 2px 22px !important;
-    align-items: flex-start !important;
-  }
-  details.foot-col-acc > .rating-badge::before { display: none; }
-
-  /* Center column: logo when accordion open */
-  footer.site.site--disturbia .foot-logo-img {
-    height: 34px !important;
-    width: auto !important;
-  }
-  footer.site.site--disturbia details.foot-col-acc.foot-col-center > .foot-logo-link {
-    margin: 14px 0 4px;
-    padding: 0 2px;
-    align-self: flex-start;
-  }
-  footer.site.site--disturbia details.foot-col-acc.foot-col-center > .foot-logo-link img {
-    margin: 0;
-  }
-
-  /* Foot-bottom: stack centred, with subtle separators */
+  /* Foot-bottom: compact centred strip below the mobile block. */
   footer.site.site--disturbia .foot-bottom {
-    grid-template-columns: 1fr !important;
     text-align: center !important;
-    gap: 14px !important;
-    margin-top: 28px !important;
-    padding: 18px 0 0 !important;
-  }
-  .foot-bottom__region {
-    justify-self: center;
-    align-self: center;
+    gap: 12px !important;
+    margin-top: 22px !important;
+    padding: 16px 0 0 !important;
+    justify-content: center !important;
   }
   .foot-bottom__copy {
     text-align: center !important;
     font-size: 11px;
     letter-spacing: 0.06em;
-  }
-
-  /* Payment tiles: horizontal scroll rail (no wrap, peek the next tile) */
-  .foot-bottom__pay {
-    flex-wrap: nowrap !important;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scroll-snap-type: x proximity;
-    padding: 4px 0 6px;
-    margin: 0 -16px; /* bleed to both viewport edges */
-    padding-left: 16px;
-    padding-right: 16px;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    width: calc(100% + 32px);
-    justify-content: flex-start !important;
-    gap: 6px;
-  }
-  .foot-bottom__pay::-webkit-scrollbar { display: none; }
-  .foot-bottom__pay .pay-tile {
-    flex: 0 0 auto;
-    scroll-snap-align: start;
-    height: 28px;
-    min-width: 44px;
-    font-size: 10px;
   }
 
   /* Newsletter band: tight on phone */
