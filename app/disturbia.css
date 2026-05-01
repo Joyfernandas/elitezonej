@@ -2549,33 +2549,27 @@ section.page { padding-top: 64px; padding-bottom: 64px; }
 @media (hover: none) and (pointer: coarse) {
   /* Product card: lift / shadow disabled — they get stuck in the "hovered"
      state after a tap and never clear until the user taps elsewhere.
-     Image swap is handled by the .is-cycling keyframes below. */
+     Image cycling is driven by data-active set by JS in ProductCard.tsx. */
   .pcard:hover { transform: none; }
   .pcard:hover .plate { box-shadow: none; }
   .pcard:hover .plate img.primary { opacity: 1; }
   .pcard:hover .plate img.alt { opacity: 0; }
 
-  /* Touch-only crossfade: primary ↔ alt while card is in viewport.
-     IntersectionObserver in ProductCard adds .is-cycling on intersect.
-     Cards out of view stay static (no animation) to save paint cost. */
-  .pcard.is-cycling .plate img.primary {
-    animation: pcard-cycle-prim 9s cubic-bezier(.4, 0, .2, 1) infinite;
-  }
-  .pcard.is-cycling .plate img.alt {
-    animation: pcard-cycle-alt 9s cubic-bezier(.4, 0, .2, 1) infinite;
-  }
-  @keyframes pcard-cycle-prim {
-    0%, 44%, 100% { opacity: 1; }
-    56%, 94%      { opacity: 0; }
-  }
-  @keyframes pcard-cycle-alt {
-    0%, 44%, 100% { opacity: 0; }
-    56%, 94%      { opacity: 1; }
-  }
-  /* Stagger neighbours so a grid row doesn't crossfade in lockstep —
-     gives the page a quiet, breathing rhythm instead of a synced flicker. */
-  .pcard.is-cycling:nth-of-type(3n+2) .plate img { animation-delay: -1.6s; }
-  .pcard.is-cycling:nth-of-type(3n+3) .plate img { animation-delay: -3.2s; }
+  /* Touch-only image cycle: primary → alt → alt-2 → primary.
+     ProductCard's rAF loop sets [data-active="0|1|2"] every SLIDE_MS while
+     the card is in view + tab visible. Cards off-screen stop ticking, so
+     they stay on whatever variant was last shown (no paint cost). */
+  .pcard[data-active="0"] .plate img.primary { opacity: 1; }
+  .pcard[data-active="0"] .plate img.alt,
+  .pcard[data-active="0"] .plate img.alt-2 { opacity: 0; }
+
+  .pcard[data-active="1"] .plate img.primary { opacity: 0; }
+  .pcard[data-active="1"] .plate img.alt { opacity: 1; }
+  .pcard[data-active="1"] .plate img.alt-2 { opacity: 0; }
+
+  .pcard[data-active="2"] .plate img.primary,
+  .pcard[data-active="2"] .plate img.alt { opacity: 0; }
+  .pcard[data-active="2"] .plate img.alt-2 { opacity: 1; }
 
   /* Made-for-you cards on home — drop the photo zoom & background swap */
   .mfy .card:hover { background: var(--paper); }
