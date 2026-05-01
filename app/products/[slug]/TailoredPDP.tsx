@@ -275,6 +275,32 @@ export default function TailoredPDP({ product, setCurrentSlug }: Props) {
         index={angleIdx}
         setIndex={setAngleIdx}
       />
+
+      <div className="pdp-buy-bar" role="region" aria-label="Add to bag">
+        <div className="pdp-buy-bar__price">
+          <span className="lbl">Total</span>
+          <span className="amt">{fmtINR(product.salePrice ?? product.price)}</span>
+        </div>
+        <button
+          type="button"
+          className="pdp-buy-bar__cta"
+          disabled={!sizeOn}
+          onClick={() => {
+            if (!sizeOn) return;
+            addItem({
+              id: lineId(product.slug, { size: sizeOn }),
+              slug: product.slug,
+              name: product.name,
+              unitPrice: product.salePrice ?? product.price,
+              qty: 1,
+              size: sizeOn,
+              imageSrc: imgSrc(product.slug, "01-front"),
+            });
+          }}
+        >
+          {sizeOn ? "Add to bag" : "Choose a size"}
+        </button>
+      </div>
     </>
   );
 }

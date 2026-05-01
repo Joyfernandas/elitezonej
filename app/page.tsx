@@ -6,6 +6,7 @@ import TrustStrip from "./components/TrustStrip";
 import ProductCard from "./components/ProductCard";
 import Reveal from "./components/Reveal";
 import HeroReveal from "./components/HeroReveal";
+import MadeForYou from "./components/MadeForYou";
 import EditorialSplit from "./components/EditorialSplit";
 import CarouselShowcase from "./components/CarouselShowcase";
 import PromoModal from "./components/PromoModal";
@@ -98,50 +99,8 @@ export default function Home() {
         </div>
       </Link>
 
-      {/* Made for You — pushed down, services come after products */}
-      <section className="mfy">
-        <div className="container" style={{ paddingTop: "var(--s-9)", paddingBottom: "var(--s-9)" }}>
-          <div className="sec-head">
-            <Reveal as="h2" className="t-display-lg">Made for you</Reveal>
-            <span className="meta t-mono-xs">Section · 01</span>
-          </div>
-          <div className="grid">
-            <Reveal delay={1}>
-              <Link className="card" href="/bespoke">
-                <div className="photo mfy-1" role="img" aria-label="Master tailor measuring a client"></div>
-                <div className="body">
-                  <span className="ix">Bespoke</span>
-                  <h3>The Bespoke Suit</h3>
-                  <p className="t-body">Three fittings, paper pattern drafted to your figure, four to six weeks. From ₹45,000.</p>
-                  <span className="arrow">Begin your suit <span>→</span></span>
-                </div>
-              </Link>
-            </Reveal>
-            <Reveal delay={2}>
-              <Link className="card" href="/bespoke">
-                <div className="photo mfy-2" role="img" aria-label="Festive sherwani in silk"></div>
-                <div className="body">
-                  <span className="ix">Made to measure</span>
-                  <h3>Custom Sherwani</h3>
-                  <p className="t-body">Choose your cloth, lining, collar, and length. Festive-ready in seven days. From ₹28,000.</p>
-                  <span className="arrow">Configure yours <span>→</span></span>
-                </div>
-              </Link>
-            </Reveal>
-            <Reveal delay={3}>
-              <Link className="card" href="/bespoke">
-                <div className="photo mfy-3" role="img" aria-label="Tailored shirt detail"></div>
-                <div className="body">
-                  <span className="ix">Made to measure</span>
-                  <h3>Tailored Shirts</h3>
-                  <p className="t-body">Premium cotton, poplin, and linen. Cut to your measurements, delivered in five days. From ₹2,800.</p>
-                  <span className="arrow">Order yours <span>→</span></span>
-                </div>
-              </Link>
-            </Reveal>
-          </div>
-        </div>
-      </section>
+      {/* Made for You — desktop 3-up grid, mobile swipe carousel */}
+      <MadeForYou />
 
       {/* Process */}
       <section className="process-strip" aria-label="How it's made">
@@ -158,16 +117,15 @@ export default function Home() {
           </Reveal>
           <span className="process-strip__hint t-mono-xs" aria-hidden="true">
             <span className="dot" />
-            Drag · Scroll · 03 panes
+            Drag to explore
           </span>
         </div>
 
         <div className="process-strip__rail" tabIndex={0} aria-roledescription="carousel">
           <article className="process-pane">
-            <div className="process-pane__num">I.</div>
             <div className="process-pane__photo pr-1" role="img" aria-label="Cloth library — wool swatches" />
             <div className="process-pane__body">
-              <span className="process-pane__step t-mono-xs">Step 01 of 03</span>
+              <span className="process-pane__step t-mono-xs">Cloth</span>
               <h3>Choose your cloth.</h3>
               <p>
                 Browse our cloth library — wools from Italian and English mills, premium Indian cottons,
@@ -177,10 +135,9 @@ export default function Home() {
           </article>
 
           <article className="process-pane">
-            <div className="process-pane__num">II.</div>
             <div className="process-pane__photo pr-2" role="img" aria-label="Master tailor at the cutting table" />
             <div className="process-pane__body">
-              <span className="process-pane__step t-mono-xs">Step 02 of 03</span>
+              <span className="process-pane__step t-mono-xs">Fitting</span>
               <h3>Get measured.</h3>
               <p>
                 Visit our atelier or book a home fitting in Delhi, Mumbai, or Bangalore. Fourteen
@@ -190,10 +147,9 @@ export default function Home() {
           </article>
 
           <article className="process-pane">
-            <div className="process-pane__num">III.</div>
             <div className="process-pane__photo pr-3" role="img" aria-label="Finished suit, pressed and ready" />
             <div className="process-pane__body">
-              <span className="process-pane__step t-mono-xs">Step 03 of 03</span>
+              <span className="process-pane__step t-mono-xs">Delivery</span>
               <h3>Receive in seven days.</h3>
               <p>
                 Cut, stitched, and pressed in our workroom. Free alterations within thirty days

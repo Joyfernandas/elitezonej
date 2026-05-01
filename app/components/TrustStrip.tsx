@@ -72,25 +72,46 @@ export default function TrustStrip() {
       <div className="trust-icons-row">
         <div className="trust-item">
           <CoinsIcon />
-          <div className="trust-title">Duties &amp; Taxes Included</div>
+          <div className="trust-title">
+            <span className="trust-label--full">Duties &amp; Taxes Included</span>
+            <span className="trust-label--short">Duties&nbsp;included</span>
+          </div>
         </div>
         <div className="trust-item">
           <TruckIcon />
-          <div className="trust-title">Free Delivery</div>
+          <div className="trust-title">
+            <span className="trust-label--full">Free Delivery</span>
+            <span className="trust-label--short">Free&nbsp;delivery</span>
+          </div>
           <div className="trust-sub">On orders over ₹15,000</div>
         </div>
         <div className="trust-item">
           <CardIcon />
-          <div className="trust-title">Buy Now Pay Later</div>
+          <div className="trust-title">
+            <span className="trust-label--full">Buy Now Pay Later</span>
+            <span className="trust-label--short">Pay&nbsp;later</span>
+          </div>
         </div>
       </div>
 
       <div className="support-row">
         <div className="support-title">Need a helping hand?</div>
         <div className="support-links">
-          <a href="tel:+919800000000"><PhoneIcon /> +91 98000 00000</a>
-          <a href="#chat"><ChatIcon /> Chat</a>
-          <a href="/bespoke"><EnvelopeIcon /> Contact Us</a>
+          <a href="tel:+919800000000" aria-label="Call +91 98000 00000">
+            <PhoneIcon />
+            <span className="trust-label--full">+91 98000 00000</span>
+            <span className="trust-label--short">Call</span>
+          </a>
+          <a href="#chat" aria-label="Open live chat">
+            <ChatIcon />
+            <span className="trust-label--full">Chat</span>
+            <span className="trust-label--short">Chat</span>
+          </a>
+          <a href="/bespoke" aria-label="Contact us by email">
+            <EnvelopeIcon />
+            <span className="trust-label--full">Contact Us</span>
+            <span className="trust-label--short">Email</span>
+          </a>
         </div>
       </div>
     </section>

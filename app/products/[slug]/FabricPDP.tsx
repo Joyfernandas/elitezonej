@@ -402,6 +402,20 @@ export default function FabricPDP({ product }: Props) {
         index={angleIdx}
         setIndex={setAngleIdx}
       />
+
+      <div className="pdp-buy-bar" role="region" aria-label="Add to bag">
+        <div className="pdp-buy-bar__price">
+          <span className="lbl">{fmtMeters(qtyMeters)}</span>
+          <span className="amt">{fmtINR(product.price * qtyMeters)}</span>
+        </div>
+        <button
+          type="button"
+          className="pdp-buy-bar__cta"
+          onClick={() => addItem(buildLine())}
+        >
+          Add to bag
+        </button>
+      </div>
     </>
   );
 }

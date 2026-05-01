@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import NewsletterForm from "./NewsletterForm";
+import FooterAccordion from "./FooterAccordion";
 
 // Social icons drawn in their conventional brand-recognisable silhouettes.
 // Generic shapes — not pixel-copies of any brand's mark file. We render in
@@ -101,8 +102,7 @@ export default function Footer({ minimal = false }: { minimal?: boolean }) {
 
       <footer className="site site--disturbia">
         <div className="foot-grid">
-          <div className="foot-col">
-            <h4>Help &amp; Info</h4>
+          <FooterAccordion title="Help & Info">
             <ul>
               <li><Link href="/bespoke">Contact</Link></li>
               <li><Link href="/bespoke">FAQs</Link></li>
@@ -113,16 +113,16 @@ export default function Footer({ minimal = false }: { minimal?: boolean }) {
               <li><Link href="/cart">Privacy</Link></li>
               <li><Link href="/cart">Cookies</Link></li>
             </ul>
-          </div>
+          </FooterAccordion>
 
-          <div className="foot-col foot-col-center">
+          <FooterAccordion title="Company" className="foot-col-center">
             <Link href="/" className="foot-logo-link" aria-label="Elite Zone J">
               <Image
                 src="/logo/lockup-trimmed.png"
                 alt="Elite Zone J"
                 width={860}
                 height={227}
-                style={{ height: "44px", width: "auto", display: "block" }}
+                className="foot-logo-img"
               />
             </Link>
             <ul>
@@ -136,10 +136,9 @@ export default function Footer({ minimal = false }: { minimal?: boolean }) {
               <li><Link href="/bespoke">Careers</Link></li>
               <li><Link href="/bespoke">Press</Link></li>
             </ul>
-          </div>
+          </FooterAccordion>
 
-          <div className="foot-col foot-col-social">
-            <h4>Follow</h4>
+          <FooterAccordion title="Follow" className="foot-col-social">
             <div className="social-row" aria-label="Social media">
               <a href="#" aria-label="Facebook"  className="social-icon"><FacebookIcon /></a>
               <a href="#" aria-label="X / Twitter" className="social-icon"><XIcon /></a>
@@ -148,7 +147,7 @@ export default function Footer({ minimal = false }: { minimal?: boolean }) {
               <a href="#" aria-label="TikTok"    className="social-icon"><TikTokIcon /></a>
             </div>
             <RatingBadge />
-          </div>
+          </FooterAccordion>
         </div>
 
         <div className="foot-bottom">

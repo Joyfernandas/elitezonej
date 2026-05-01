@@ -4,6 +4,7 @@ import MobileNav from "./MobileNav";
 import CartDrawer from "./CartDrawer";
 import SearchToggle from "./SearchToggle";
 import WishlistHeaderLink from "./WishlistHeaderLink";
+import { NAV } from "./nav-data";
 
 // Filled-outline icons in the FontAwesome Pro Light visual family —
 // the same icon set Disturbia uses on its header. These are common
@@ -71,14 +72,14 @@ export default function Header() {
         </div>
 
         <div className="brand">
-          <Link href="/" className="brand-logo-link">
+          <Link href="/" className="brand-logo-link" aria-label="Elite Zone J — home">
             <Image
               src="/logo/wordmark-trimmed.png"
               alt="Elite Zone J"
               width={892}
               height={116}
               priority
-              style={{ height: "clamp(32px, 3.8vw, 52px)", width: "auto", display: "block" }}
+              className="brand-wordmark"
             />
           </Link>
         </div>
@@ -93,99 +94,38 @@ export default function Header() {
       {/* Row 2 — primary navigation */}
       <nav className="header-nav">
         <ul className="nav-primary">
-          <li className="has-mega">
-            <Link href="/collection?c=men">Men</Link>
-            <div className="mega">
-              <div className="row">
-                <div>
-                  <h5>Suits</h5>
-                  <ul>
-                    <li><Link href="/collection?c=men&sub=tuxedos">Tuxedos<span className="meta">Black-tie · Single-button peak lapel</span></Link></li>
-                    <li><Link href="/collection?c=men&sub=business-suits">Business Suits<span className="meta">Two-piece · Slim &amp; tailored</span></Link></li>
-                    <li><Link href="/collection?c=men&sub=wedding-suits">Wedding Suits<span className="meta">Three-piece · Sherwani · Bandhgala</span></Link></li>
-                  </ul>
+          {NAV.map((cat) => (
+            <li key={cat.label} className={cat.groups ? "has-mega" : undefined}>
+              <Link href={cat.href} className={cat.sale ? "nav-sale" : undefined}>{cat.label}</Link>
+              {cat.groups && (
+                <div className="mega">
+                  <div className="row">
+                    {cat.groups.map((g) => (
+                      <div key={g.title}>
+                        <h5>{g.title}</h5>
+                        <ul>
+                          {g.items.map((it) => (
+                            <li key={it.href}>
+                              <Link href={it.href}>
+                                {it.label}
+                                {it.meta && <span className="meta">{it.meta}</span>}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                  {cat.footer && (
+                    <div className="footer">
+                      <span>{cat.footer.caption}</span>
+                      <Link href={cat.footer.ctaHref}>{cat.footer.ctaLabel} &rarr;</Link>
+                    </div>
+                  )}
                 </div>
-                <div>
-                  <h5>Shirts</h5>
-                  <ul>
-                    <li><Link href="/collection?c=men&sub=classic-shirts">Classic Shirt<span className="meta">Spread &amp; semi-spread collars</span></Link></li>
-                    <li><Link href="/collection?c=men&sub=mandarin-shirts">Mandarin Collar<span className="meta">Grandad &amp; Nehru styles</span></Link></li>
-                    <li><Link href="/collection?c=men&sub=pointed-shirts">Pointed Collar<span className="meta">Forward-point &amp; cutaway</span></Link></li>
-                  </ul>
-                </div>
-                <div>
-                  <h5>Pants</h5>
-                  <ul>
-                    <li><Link href="/collection?c=men&sub=tapered-pants">Tapered Fit<span className="meta">Flat-front · Modern</span></Link></li>
-                    <li><Link href="/collection?c=men&sub=bell-bottoms">Bell Bottoms<span className="meta">Wide-flare retro</span></Link></li>
-                    <li><Link href="/collection?c=men&sub=relaxed-pants">Relaxed Fit<span className="meta">Easy through the leg</span></Link></li>
-                    <li><Link href="/collection?c=men&sub=pleated-pants">Pleated Pant<span className="meta">Single &amp; double pleat</span></Link></li>
-                  </ul>
-                </div>
-                <div>
-                  <h5>Accessories</h5>
-                  <ul>
-                    <li><Link href="/collection?c=men&sub=brooches">Brooch<span className="meta">Lapel &amp; sherwani</span></Link></li>
-                    <li><Link href="/collection?c=men&sub=chains">Chain<span className="meta">Pocket-watch &amp; collar</span></Link></li>
-                    <li><Link href="/collection?c=men&sub=rings">Ring<span className="meta">Sterling silver, signet</span></Link></li>
-                    <li><Link href="/collection?c=men&sub=glasses">Glasses<span className="meta">Acetate &amp; metal</span></Link></li>
-                    <li><Link href="/collection?c=men&sub=belts">Belt<span className="meta">Italian calfskin · Reversible</span></Link></li>
-                  </ul>
-                </div>
-              </div>
-              <div className="footer">
-                <span>The Men&apos;s Edit · Spring/Summer 2026</span>
-                <Link href="/collection?c=men">View all men &rarr;</Link>
-              </div>
-            </div>
-          </li>
-          <li className="has-mega">
-            <Link href="/collection?c=women">Women</Link>
-            <div className="mega">
-              <div className="row">
-                <div>
-                  <h5>Corsets</h5>
-                  <ul>
-                    <li><Link href="/collection?c=women&sub=corsets">Corsets<span className="meta">Boned · Hand-laced · Editorial</span></Link></li>
-                  </ul>
-                </div>
-                <div>
-                  <h5>Formal Skirts</h5>
-                  <ul>
-                    <li><Link href="/collection?c=women&sub=pencil-skirts">Pencil<span className="meta">Knee-length · Tailored</span></Link></li>
-                    <li><Link href="/collection?c=women&sub=a-line-skirts">A-line<span className="meta">Mid-calf · Pleated</span></Link></li>
-                  </ul>
-                </div>
-                <div>
-                  <h5>Dresses</h5>
-                  <ul>
-                    <li><Link href="/collection?c=women&sub=office-wear">Office Wear<span className="meta">Shirt-dress · Blazer-dress · Suiting</span></Link></li>
-                    <li><Link href="/collection?c=women&sub=evening-gowns">Evening Gowns<span className="meta">Bias-silk · Velvet · Lehenga</span></Link></li>
-                  </ul>
-                </div>
-                <div>
-                  <h5>Accessories</h5>
-                  <ul>
-                    <li><Link href="/collection?c=women&sub=brooches">Brooch<span className="meta">Statement &amp; minimal</span></Link></li>
-                    <li><Link href="/collection?c=women&sub=chains">Chain<span className="meta">Layered &amp; dainty</span></Link></li>
-                    <li><Link href="/collection?c=women&sub=rings">Ring<span className="meta">Sterling silver · Stack</span></Link></li>
-                    <li><Link href="/collection?c=women&sub=glasses">Glasses<span className="meta">Acetate &amp; metal</span></Link></li>
-                    <li><Link href="/collection?c=women&sub=belts">Belt<span className="meta">Calfskin · Wide &amp; corseted</span></Link></li>
-                  </ul>
-                </div>
-              </div>
-              <div className="footer">
-                <span>The Women&apos;s Edit · Spring/Summer 2026</span>
-                <Link href="/collection?c=women">View all women &rarr;</Link>
-              </div>
-            </div>
-          </li>
-          <li><Link href="/collection?c=fabrics">Fabrics</Link></li>
-          <li><Link href="/collection?c=festive">Festive</Link></li>
-          <li><Link href="/bespoke">Bespoke</Link></li>
-          <li><Link href="/#editorial">Seasons</Link></li>
-          <li><Link href="/collection?c=men">View All</Link></li>
-          <li><Link href="/collection?c=festive" className="nav-sale">Sale</Link></li>
+              )}
+            </li>
+          ))}
         </ul>
       </nav>
     </header>

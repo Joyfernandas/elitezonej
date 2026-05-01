@@ -122,7 +122,9 @@
 
 .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s-5); }
 @media (max-width: 900px) { .grid { grid-template-columns: repeat(2, 1fr); gap: var(--s-3); } }
-@media (max-width: 520px) { .grid { grid-template-columns: 1fr; } }
+/* Keep 2-up on phones — denser browsing, more product per scroll. Drop to
+   1-up only at extreme small (≤375px) where 2 cards become unreadable. */
+@media (max-width: 375px) { .grid { grid-template-columns: 1fr; gap: var(--s-3); } }
 
 /* Inline pcard rules — same shape as home.css .pcard but the meta-link
    wrapper is the navigable surface (since cards have heart + quick-add

@@ -312,9 +312,19 @@ header.site {
 }
 .brand a { color: inherit; }
 
-/* Logo links */
-.brand-logo-link { display: flex; align-items: center; }
+/* Logo links — single wordmark across breakpoints; just scales down on
+   phone via clamp. The wordmark image is hand-drawn, so a smaller render
+   reads as a refined editorial mast rather than a generic shrunk logo. */
+.brand-logo-link { display: flex; align-items: center; color: var(--ink); }
 .foot-logo-link  { display: flex; justify-content: center; margin-bottom: 28px; }
+.brand-wordmark {
+  height: clamp(28px, 4vw, 50px);
+  width: auto;
+  display: block;
+}
+@media (max-width: 600px) {
+  .brand-wordmark { height: clamp(26px, 7vw, 32px); }
+}
 
 /* =============================================================
    Side-rail rotated promo sticker + dismiss button + modal
@@ -1507,10 +1517,153 @@ footer.site .foot-grid {
   display: inline-flex; align-items: center; gap: 8px;
 }
 .support-links a:hover { color: var(--ink-3); }
+
+/* Desktop default: full label visible, mobile-short hidden */
+.trust-label--short { display: none; }
+
+/* Mobile — collapse trust strip into a compact 3×2 hairline grid so all
+   six items (3 trust + 3 contact) sit on one screen. Editorial spec
+   sheet feel: small icon, micro-cap label, 1px dividers, no chrome. */
 @media (max-width: 720px) {
-  .trust-icons-row { grid-template-columns: 1fr; gap: 32px; padding: 32px 16px; }
-  .support-links { gap: 16px; }
-  .support-links a { font-size: 13px; }
+  .trust-label--full { display: none; }
+  .trust-label--short { display: inline; }
+
+  .trust-icons {
+    background: var(--paper);
+    border-top: 1px solid var(--paper-3);
+    border-bottom: 1px solid var(--paper-3);
+  }
+
+  .trust-icons-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    padding: 0;
+    max-width: 100%;
+    border-bottom: 1px solid var(--paper-3);
+    background: var(--paper);
+  }
+  .trust-item {
+    padding: 18px 8px 16px;
+    text-align: center;
+    border-right: 1px solid var(--paper-3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 2px;
+  }
+  .trust-item:last-child { border-right: 0; }
+  .trust-item svg {
+    width: 26px !important;
+    height: 26px !important;
+    margin: 0 0 8px !important;
+    color: var(--ink);
+  }
+  .trust-item .trust-title {
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    letter-spacing: 0.16em;
+    line-height: 1.3;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin: 0;
+  }
+  .trust-item .trust-sub {
+    font-family: var(--font-body);
+    font-size: 9px;
+    letter-spacing: 0.04em;
+    color: var(--ink-3);
+    line-height: 1.3;
+    margin-top: 2px;
+  }
+
+  .support-row {
+    background: var(--paper);
+    padding: 0;
+    border-top: 0;
+    text-align: left;
+  }
+  .support-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    padding: 12px 16px 6px;
+    margin: 0;
+  }
+  .support-title::after {
+    content: "";
+    flex: 1 1 auto;
+    height: 1px;
+    background: var(--paper-3);
+  }
+
+  .support-links {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    padding: 0;
+    margin: 0;
+    justify-content: stretch;
+  }
+  .support-links a {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 12px 8px 16px !important;
+    min-height: 64px;
+    text-align: center;
+    border-right: 1px solid var(--paper-3);
+    border-top: 1px solid var(--paper-3);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+  .support-links a:last-child { border-right: 0; }
+  .support-links a svg {
+    width: 20px !important;
+    height: 20px !important;
+    color: var(--ink);
+    flex-shrink: 0;
+  }
+  /* Subtle press-state — accent stripe slides in from the bottom */
+  .support-links a {
+    position: relative;
+    overflow: hidden;
+  }
+  .support-links a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 240ms cubic-bezier(.22, 1, .36, 1);
+  }
+  .support-links a:active {
+    color: var(--accent);
+  }
+  .support-links a:active::after { transform: scaleX(1); }
+  .support-links a:active svg { color: var(--accent); }
+}
+
+/* Ultra-small (≤340px) — drop trust labels to single line, smaller still */
+@media (max-width: 340px) {
+  .trust-item { padding: 14px 4px 12px; }
+  .trust-item .trust-title { font-size: 8.5px; letter-spacing: 0.12em; }
+  .trust-item .trust-sub { display: none; }
 }
 
 /* legacy trust-strip styles still apply where used */
@@ -1613,51 +1766,415 @@ section.page { padding-top: 64px; padding-bottom: 64px; }
   display: none;
   background: transparent; border: 0; padding: 8px;
   width: 44px; height: 44px; cursor: pointer; color: var(--ink);
+  align-items: center; justify-content: center;
 }
-.hamburger span {
-  display: block; width: 22px; height: 1.5px; background: currentColor;
-  margin: 5px 0; transition: transform 250ms ease, opacity 250ms ease;
+.hb-svg {
+  display: block;
+  overflow: visible;
 }
-.hamburger[aria-expanded="true"] span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
-.hamburger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
-.hamburger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+.hb-svg line {
+  transform-origin: center;
+  transform-box: fill-box;
+  transition:
+    transform 360ms cubic-bezier(.65, 0, .35, 1),
+    opacity 220ms cubic-bezier(.22, 1, .36, 1),
+    stroke-dashoffset 280ms cubic-bezier(.22, 1, .36, 1);
+}
+/* Open state — top → 45°, bottom → -45°, middle fades; the lines slide
+   to the same Y so they cross at the centre forming a typographic X. */
+.hb-svg[data-open="true"] .hb-top { transform: translateY(7px) rotate(45deg);  }
+.hb-svg[data-open="true"] .hb-mid { opacity: 0; transform: scaleX(0.2); }
+.hb-svg[data-open="true"] .hb-bot { transform: translateY(-7px) rotate(-45deg); }
 @media (max-width: 900px) {
-  .hamburger { display: inline-flex; align-items: center; justify-content: center; }
+  .hamburger { display: inline-flex; }
+}
+/* Subtle press feedback on touch devices */
+.hamburger:active .hb-svg { transform: scale(0.92); transition: transform 120ms ease-out; }
+
+/* Backdrop — warm-paper darkroom: brown tint over a faint paper-grain
+   noise so the page behind reads as "dimmed paper", not a flat scrim. */
+.mobile-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(28, 18, 12, 0.52);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.92  0 0 0 0 0.84  0 0 0 0 0.72  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: 200px 200px;
+  background-blend-mode: overlay;
+  z-index: 199;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 320ms cubic-bezier(.22, 1, .36, 1);
+}
+.mobile-backdrop[data-open="true"] {
+  opacity: 1;
+  pointer-events: auto;
 }
 
+/* Drawer shell */
 .mobile-drawer {
-  position: fixed; inset: 0;
-  background: #cccccc;           /* Disturbia's --sidebar-menu-background */
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: min(420px, 92vw);
+  max-width: 92vw;
+  background: var(--paper);
   z-index: 200;
-  padding: 80px 24px 48px;
-  display: flex; flex-direction: column; gap: 16px;
+  display: flex;
+  flex-direction: column;
   transform: translateX(-100%);
-  transition: transform 350ms cubic-bezier(.645,.045,.355,1);
-  overflow-y: auto;
+  transition: transform 360ms cubic-bezier(.22, 1, .36, 1);
+  box-shadow: 24px 0 48px -24px rgba(10, 8, 6, 0.18);
+  overflow: hidden;
 }
 .mobile-drawer[data-open="true"] { transform: translateX(0); }
-.mobile-drawer a {
-  display: block;
-  font-family: var(--font-body);
-  font-size: 14px;
-  letter-spacing: 0.06em;
+
+/* Head — sticky at top */
+.mobile-drawer__head {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 18px 14px;
+  border-bottom: 1px solid var(--paper-3);
+  min-height: 56px;
+  background: var(--paper);
+}
+.mobile-drawer__title {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.32em;
   text-transform: uppercase;
+  color: var(--ink-3);
+}
+.mobile-drawer__title-rule {
+  display: inline-block;
+  width: 24px;
+  height: 1px;
+  background: var(--paper-3);
+}
+.mobile-drawer__title-dot {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.mobile-drawer__close {
+  width: 44px;
+  height: 44px;
+  background: transparent;
+  border: 0;
   color: var(--ink);
-  padding: 14px 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 220ms cubic-bezier(.22, 1, .36, 1);
+}
+.mobile-drawer__close:active { transform: rotate(90deg); }
+
+/* Single-pane scroll container */
+.mobile-drawer__scroll {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding: 4px 0 32px;
+}
+
+/* Category list */
+.mobile-drawer__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.mobile-drawer__list li { list-style: none; }
+.mobile-drawer__cat { position: relative; }
+
+/* Category header row — top-level Men / Women / Bespoke / etc. */
+.mobile-drawer__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  background: transparent;
+  border: 0;
+  text-align: left;
+  padding: 18px 22px;
+  min-height: 60px;
+  border-bottom: 1px solid var(--paper-3);
+  cursor: pointer;
+  text-decoration: none;
+  position: relative;
+  transition: background 200ms cubic-bezier(.22, 1, .36, 1);
+}
+.mobile-drawer__row::after {
+  /* Accent stripe slides in on the left edge when the row is active */
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 14px;
+  bottom: 14px;
+  width: 2px;
+  background: var(--accent);
+  transform: scaleY(0);
+  transform-origin: center;
+  transition: transform 280ms cubic-bezier(.22, 1, .36, 1);
+}
+.mobile-drawer__cat[data-open="true"] > .mobile-drawer__row::after,
+.mobile-drawer__row:active::after { transform: scaleY(1); }
+.mobile-drawer__row:active { background: var(--paper-2); }
+
+.mobile-drawer__row-label {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 22px;
+  letter-spacing: -0.012em;
+  color: var(--ink);
+  line-height: 1.05;
+}
+.mobile-drawer__row-label.is-sale {
+  color: var(--accent);
+  font-style: italic;
+}
+
+/* Chev rotates 180° when category is open */
+.mobile-drawer__row-chev {
+  display: inline-flex;
+  align-items: center;
+  color: var(--ink-3);
+  transition: transform 320ms cubic-bezier(.22, 1, .36, 1), color 220ms;
+}
+.mobile-drawer__cat[data-open="true"] > .mobile-drawer__row .mobile-drawer__row-chev {
+  color: var(--accent);
+  transform: rotate(180deg);
+}
+
+/* Right-arrow on flat category rows (Bespoke, Sale, etc.) */
+.mobile-drawer__row-arrow {
+  display: inline-flex;
+  align-items: center;
+  color: var(--ink-3);
+  opacity: 0.5;
+  transition: transform 280ms cubic-bezier(.22, 1, .36, 1), opacity 220ms, color 220ms;
+}
+.mobile-drawer__row:active .mobile-drawer__row-arrow {
+  opacity: 1;
+  color: var(--accent);
+  transform: translateX(4px);
+}
+
+/* Inline expansion panel — animated via grid-template-rows 0fr → 1fr */
+.mobile-drawer__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 420ms cubic-bezier(.22, 1, .36, 1);
+  background: var(--paper-2);
+}
+.mobile-drawer__panel-inner {
+  min-height: 0;
+  overflow: hidden;
+  padding: 0 22px;
+  opacity: 0;
+  transition: opacity 240ms cubic-bezier(.22, 1, .36, 1) 80ms;
+}
+.mobile-drawer__cat[data-open="true"] > .mobile-drawer__panel {
+  grid-template-rows: 1fr;
   border-bottom: 1px solid var(--paper-3);
 }
-.mobile-drawer a:hover { color: var(--ink-3); }
-.mobile-drawer .close {
-  position: absolute; top: 18px; right: 18px;
-  width: 44px; height: 44px;
-  background: transparent; border: 0; color: var(--ink);
-  font-size: 28px; cursor: pointer;
+.mobile-drawer__cat[data-open="true"] > .mobile-drawer__panel > .mobile-drawer__panel-inner {
+  opacity: 1;
+  padding: 4px 22px 22px;
 }
-.mobile-drawer .group {
-  font-family: var(--font-body);
-  font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+
+/* "Shop all X →" — top of each expanded panel */
+.mobile-drawer__shopall {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 14px 0 18px;
+  padding: 10px 0;
+  min-height: 40px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 220ms, gap 220ms;
+}
+.mobile-drawer__shopall:active {
+  border-color: var(--accent);
+  gap: 14px;
+}
+
+/* Sub-group within an expanded panel — eyebrow + items */
+.mobile-drawer__sub { margin: 0 0 18px; }
+.mobile-drawer__sub:last-child { margin-bottom: 4px; }
+.mobile-drawer__sub-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
   color: var(--ink-3);
-  margin: 16px 0 4px;
+}
+.mobile-drawer__sub-rule {
+  flex: 1 1 auto;
+  height: 1px;
+  background: var(--paper-3);
+}
+.mobile-drawer__sub-rule:first-child { max-width: 12px; flex: 0 0 auto; }
+.mobile-drawer__sub ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.mobile-drawer__sub ul li { list-style: none; }
+.mobile-drawer__sub ul a {
+  display: block;
+  padding: 10px 0;
+  min-height: 44px;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 16px;
+  letter-spacing: -0.005em;
+  color: var(--ink-2);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  transition: color 200ms, padding 220ms;
+}
+.mobile-drawer__sub ul a:active {
+  color: var(--accent);
+  padding-left: 6px;
+}
+.mobile-drawer__sub ul li:last-child a { border-bottom: 0; }
+
+/* Atelier story block — anchors the bottom of the menu pane */
+.mobile-drawer__atelier {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 16px;
+  margin: 28px 22px 8px;
+  padding: 14px;
+  background: var(--paper-2);
+  border: 1px solid var(--paper-3);
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+  overflow: hidden;
+}
+.mobile-drawer__atelier::before {
+  /* Hairline corner brackets — editorial signature */
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 14px;
+  height: 14px;
+  border-left: 1px solid var(--accent);
+  border-top: 1px solid var(--accent);
+}
+.mobile-drawer__atelier::after {
+  content: "";
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  width: 14px;
+  height: 14px;
+  border-right: 1px solid var(--accent);
+  border-bottom: 1px solid var(--accent);
+}
+.mobile-drawer__atelier-img {
+  aspect-ratio: 1;
+  background-size: cover;
+  background-position: center;
+  background-color: var(--paper-3);
+  filter: grayscale(0.15) contrast(1.04);
+}
+.mobile-drawer__atelier-copy { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.mobile-drawer__atelier-ix {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.mobile-drawer__atelier h4 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.15;
+  letter-spacing: -0.005em;
+  color: var(--ink);
+}
+.mobile-drawer__atelier p {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+.mobile-drawer__atelier-cta {
+  margin-top: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.mobile-drawer__atelier-cta svg { transition: transform 280ms cubic-bezier(.22, 1, .36, 1); }
+.mobile-drawer__atelier:active .mobile-drawer__atelier-cta svg { transform: translateX(4px); }
+
+/* Tail — account, wishlist, bag, region */
+.mobile-drawer__tail {
+  flex: 0 0 auto;
+  border-top: 1px solid var(--paper-3);
+  padding: 8px 22px env(safe-area-inset-bottom, 16px);
+  display: flex;
+  flex-direction: column;
+  background: var(--paper-2);
+}
+.mobile-drawer__tail-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 48px;
+  padding: 10px 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--paper-3);
+}
+.mobile-drawer__tail-row:last-of-type { border-bottom: 0; }
+.mobile-drawer__tail-row:hover { color: var(--accent); }
+.mobile-drawer__tail-row svg { color: var(--ink-3); transition: color 220ms; }
+.mobile-drawer__tail-row:active svg { color: var(--accent); }
+.mobile-drawer__region {
+  padding: 12px 0 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--ink-3);
 }
 
 /* =============================================================
@@ -1862,3 +2379,412 @@ section.page { padding-top: 64px; padding-bottom: 64px; }
   .announce-ticker { animation: none; }
 }
 
+/* =============================================================
+   Mobile audit fixes — iOS zoom, tap targets, ultra-small floors,
+   tap-press feedback. Mobile-first refinements from the QA pass.
+   ============================================================= */
+
+/* Prevent iOS Safari auto-zoom on input focus. Anything below 16px
+   triggers it; we hold body-size at 15px on desktop but lift to 16px
+   on phones for any focusable form element. */
+@media (max-width: 720px) {
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="search"],
+  input[type="number"],
+  input[type="password"],
+  input[type="url"],
+  input[type="date"],
+  input[type="time"],
+  input:not([type]),
+  select,
+  textarea {
+    font-size: 16px !important;
+    line-height: 1.45;
+  }
+}
+
+/* Ultra-small (≤374px) — tighten container padding to keep content room */
+@media (max-width: 374px) {
+  :root {
+    --pad-x-m: 12px;
+  }
+  .container { padding-left: 12px !important; padding-right: 12px !important; }
+}
+
+/* Tap-press feedback — subtle scale-down on press for premium "weight".
+   Constrained to interactive elements that don't already have it. */
+@media (hover: none) and (pointer: coarse) {
+  .btn, .pcard, .mfy .card, .hg-tile, .pdp-buy-bar__cta, .util-link,
+  .icon-btn, .cart-trigger, .promo-sticker, .promo-modal-close,
+  .mobile-drawer__row, .mobile-drawer__shopall, .mobile-drawer__atelier {
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn:active { transform: translateY(1px) scale(0.99); transition: transform 120ms cubic-bezier(.4, 0, .2, 1); }
+  .pcard:active { transform: scale(0.985); transition: transform 160ms cubic-bezier(.4, 0, .2, 1); }
+  .pdp-buy-bar__cta:active { transform: scale(0.97); }
+}
+
+/* Lift small buttons + cart remove + summary links to 44px tap target */
+.btn-sm { min-height: 44px !important; padding: 12px 22px !important; }
+
+@media (max-width: 720px) {
+  /* Cart line-item remove + alt-line links */
+  .item .remove {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 0;
+  }
+  .item .alt-line a {
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 0;
+  }
+  .item .specs {
+    font-size: 13px;
+    gap: 10px;
+  }
+
+  /* Search overlay X close — bump tap area */
+  .search-x {
+    min-width: 44px !important;
+    min-height: 44px !important;
+    font-size: 22px !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+  }
+  .search-close { min-height: 44px !important; padding: 12px 16px !important; }
+
+  /* Cart summary sticky offset — mobile header is 56px not 104px */
+  .summary { top: 64px !important; }
+
+  /* Newsletter form layout: stack input + button cleanly */
+  .newsletter-band form {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+  .newsletter-band form input { width: 100%; }
+  .newsletter-band form button {
+    width: 100%;
+    min-height: 48px;
+  }
+  .newsletter-band {
+    padding: 32px 16px !important;
+  }
+  .newsletter-band h3 { margin-bottom: 14px !important; }
+
+  /* Cart drawer line-item layout — keep image proportional, allow truncation */
+  .cart-drawer-line {
+    grid-template-columns: 76px 1fr !important;
+    gap: 12px !important;
+  }
+  .cart-drawer-line .name {
+    font-size: 14px !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  /* Promo modal — full-bleed at 320 */
+  .promo-modal {
+    width: calc(100% - 24px) !important;
+    max-width: 420px;
+    padding: 36px 20px 20px !important;
+  }
+  .promo-modal-close {
+    width: 44px;
+    height: 44px;
+    top: 4px !important;
+    right: 4px !important;
+  }
+
+  /* Bespoke form — ensure 2-col grid stacks at small */
+  .book form .grid2 { grid-template-columns: 1fr !important; gap: var(--s-4) !important; }
+  .book form input,
+  .book form textarea,
+  .book form select { padding: 14px 14px !important; }
+
+  /* Wishlist + collection card meta tightening */
+  .pcard .meta { padding-top: 10px; }
+  .pcard .name { font-size: 15px !important; }
+  .pcard .price { font-size: 13px !important; }
+  .pcard .tag { font-size: 10.5px !important; letter-spacing: 0.04em; }
+
+  /* Sale + new badges — keep visible at small but compact */
+  .badge-stack { top: 8px !important; left: 8px !important; gap: 4px !important; }
+  .badge { font-size: 9.5px !important; padding: 4px 7px !important; letter-spacing: 0.12em; }
+
+  /* PDP info column — tighten padding on phones */
+  .pd .info, .fabric-pd .info {
+    padding: 24px 16px !important;
+  }
+
+  /* Lightbox close + nav arrows — finger room */
+  .lb-close, .lb-nav {
+    width: 56px !important;
+    height: 56px !important;
+  }
+}
+
+/* iOS safe-area room — only on mobile, only on cart page (PDP has its
+   sticky bar reservation handled elsewhere). */
+@media (max-width: 720px) {
+  .cart-page-wrap {
+    padding-bottom: calc(var(--s-7) + env(safe-area-inset-bottom, 0)) !important;
+  }
+  /* PDP keeps the 88px buy-bar reservation and adds safe-area on top */
+  .pd, .fabric-pd {
+    padding-bottom: calc(88px + env(safe-area-inset-bottom, 0)) !important;
+  }
+}
+
+/* — Touch-only: kill hover-only reveals and sticky tap states — */
+@media (hover: none) and (pointer: coarse) {
+  /* Product card: lift / shadow disabled — they get stuck in the "hovered"
+     state after a tap and never clear until the user taps elsewhere.
+     Image swap is handled by the .is-cycling keyframes below. */
+  .pcard:hover { transform: none; }
+  .pcard:hover .plate { box-shadow: none; }
+  .pcard:hover .plate img.primary { opacity: 1; }
+  .pcard:hover .plate img.alt { opacity: 0; }
+
+  /* Touch-only crossfade: primary ↔ alt while card is in viewport.
+     IntersectionObserver in ProductCard adds .is-cycling on intersect.
+     Cards out of view stay static (no animation) to save paint cost. */
+  .pcard.is-cycling .plate img.primary {
+    animation: pcard-cycle-prim 9s cubic-bezier(.4, 0, .2, 1) infinite;
+  }
+  .pcard.is-cycling .plate img.alt {
+    animation: pcard-cycle-alt 9s cubic-bezier(.4, 0, .2, 1) infinite;
+  }
+  @keyframes pcard-cycle-prim {
+    0%, 44%, 100% { opacity: 1; }
+    56%, 94%      { opacity: 0; }
+  }
+  @keyframes pcard-cycle-alt {
+    0%, 44%, 100% { opacity: 0; }
+    56%, 94%      { opacity: 1; }
+  }
+  /* Stagger neighbours so a grid row doesn't crossfade in lockstep —
+     gives the page a quiet, breathing rhythm instead of a synced flicker. */
+  .pcard.is-cycling:nth-of-type(3n+2) .plate img { animation-delay: -1.6s; }
+  .pcard.is-cycling:nth-of-type(3n+3) .plate img { animation-delay: -3.2s; }
+
+  /* Made-for-you cards on home — drop the photo zoom & background swap */
+  .mfy .card:hover { background: var(--paper); }
+  .mfy .card:hover .photo { transform: none; }
+  .mfy .card:hover .arrow { color: var(--ink); }
+
+  /* Editorial split / worn-shot zoom-on-hover */
+  .worn .pcard:hover .plate img { transform: none; }
+
+  /* Cart qty + stepper background swap — sticky after tap */
+  .qty button:hover { background: transparent; }
+  .stepper .stp:hover:not(:disabled) { background: transparent; }
+  .qty-presets button:hover { border-color: var(--paper-3); color: var(--ink-2); }
+
+  /* Lightbox arrows / close — irrelevant on touch (lightbox only opens
+     from a tap, but keep clean visuals) */
+  .lb-close:hover, .lb-nav:hover { background: rgba(250, 247, 242, 0.08); }
+
+  /* Editorial route-transition fade — stays, but Ken Burns and grain
+     drift on hero are noisy on phones; covered in home.css already. */
+
+  /* Buttons: cancel the 1px lift on touch so taps don't leave the
+     button sitting 1px high until the next tap clears it */
+  .btn:hover { transform: none; }
+
+  /* Mega menu doesn't render on mobile (nav is hidden), nothing to do */
+}
+
+/* — Tap-target floors: ensure 44×44 wherever fingers land — */
+@media (max-width: 720px) {
+  /* Cart drawer qty buttons */
+  .qty button {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 10px 14px;
+    font-size: 15px;
+  }
+  .qty span { min-width: 44px; padding: 0 12px; }
+
+  /* PDP stepper — already 48px tall, but ensure width on mobile */
+  .stepper .stp { min-width: 48px; }
+
+  /* Cart drawer line-item qty buttons (inline-styled in CartDrawer) */
+  .cart-line-qty button {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 10px 14px !important;
+  }
+
+  /* Footer payment tiles need finger-room when tapped */
+  .pay-tile { min-height: 28px; padding: 6px 10px; }
+
+  /* Region selector / language pickers in footer bottom */
+  .foot-bottom__region {
+    min-height: 44px;
+    padding: 8px 12px;
+    align-items: center;
+    display: inline-flex;
+    gap: 8px;
+  }
+}
+
+/* — Type / logo floors on mobile: avoid sub-12px caps and tiny logos — */
+@media (max-width: 720px) {
+  /* Header tightens vertically on phone so the wordmark/monogram and the
+     hamburger / cart icons share a 56px row. */
+  .header-top { padding: 12px 16px !important; gap: 12px !important; min-height: 56px; }
+  .header-left { gap: 8px !important; }
+  .header-right { gap: 8px !important; }
+  /* Hide secondary util chips on phone — drawer covers Account / Currency */
+  .util-account, .util-currency { display: none !important; }
+
+  /* Mono caps stay readable: bump 10–11px floors to 12px */
+  .t-mono-xs,
+  .hero-eyebrow,
+  .ix.t-mono-xs,
+  .pcard .tag,
+  .foot-bottom__copy,
+  .foot-bottom__region,
+  .returns-line.t-mono-xs {
+    font-size: clamp(12px, 3.2vw, 13px);
+  }
+
+  /* Body line-height eases for small screens */
+  body { line-height: 1.55; }
+
+  /* Section heads breathe */
+  .sec-head h2 { font-size: clamp(28px, 7.5vw, 40px); line-height: 1.05; }
+
+  /* Tighten section vertical padding on phone so content doesn't scroll
+     forever between sections */
+  section.page { padding-top: 48px !important; padding-bottom: 48px !important; }
+
+  /* Hero on standard /home page (.hero) — single column on phone, but
+     ensure the copy doesn't get squeezed; lift the copy padding */
+  .hero-copy { padding: 32px 16px 28px !important; }
+  .hero h1 { font-size: clamp(34px, 9vw, 52px) !important; line-height: 1.04 !important; }
+  .hero .deck { font-size: 15px; }
+
+  /* Editorial split: stack vertically + tighten copy */
+  .editorial .copy { padding: 32px 16px !important; }
+  .editorial h3 { font-size: clamp(28px, 7vw, 36px) !important; line-height: 1.08 !important; }
+  .editorial .img { min-height: 320px !important; }
+
+  /* Bespoke teaser — compact stack */
+  .bespoke-teaser { padding: 48px 0 !important; }
+  .bespoke-teaser h3 { font-size: clamp(28px, 7.2vw, 38px) !important; line-height: 1.08 !important; }
+  .bespoke-teaser .row { padding: 0 16px !important; gap: 20px !important; }
+
+  /* Made-for-you cards — single column already (≤720), but tighten gaps */
+  .mfy .grid { gap: 1px; }
+  .mfy h3 { font-size: clamp(22px, 6vw, 26px) !important; }
+  .mfy .card { padding-bottom: 24px; }
+  .mfy .card .body { padding: 0 16px; gap: 8px; }
+  .mfy .card .photo { aspect-ratio: 16/11; margin-bottom: 16px; }
+
+  /* Process strip — peek the next pane on phone */
+  .process-strip { padding: 40px 0 32px !important; }
+  .process-strip__rail { grid-auto-columns: 84vw !important; gap: 12px !important; }
+  .process-pane { min-height: 380px !important; }
+  .process-pane h3 { font-size: 22px !important; }
+  .process-pane p { font-size: 14px !important; line-height: 1.6 !important; }
+
+  /* Ribbon — slow + smaller on phone */
+  .ribbon { padding: 16px 0 !important; }
+  .ribbon-track { font-size: clamp(24px, 7vw, 36px) !important; gap: 32px !important; }
+}
+
+/* — Motion budget on touch: trim looping animations that compete with
+     scroll attention. Ken-Burns is already handled in home.css. — */
+@media (hover: none) and (pointer: coarse) {
+  /* Page-enter fade still runs — short and scoped — but the route
+     transition wipe is heavier and feels jittery on mid-range phones. */
+  .route-transition { animation-duration: 0.4s; }
+
+  /* Ribbon italic marquee: slow it down — 42s is fine on desktop, but
+     phone CPUs often choke; reduce paint cost by halving the speed. */
+  .ribbon-track { animation-duration: 60s; }
+
+  /* Process strip pulse dot — keep, it's tiny */
+
+  /* Newsletter band gradient pulses removed in their own files;
+     announce-ticker already pauses with prefers-reduced-motion. */
+}
+
+/* — Sticky PDP buy bar — pinned to bottom of viewport on phone, hides
+     on desktop. The TailoredPDP / FabricPDP components render the bar
+     when they have all the state; CSS positions it. — */
+.pdp-buy-bar { display: none; }
+@media (max-width: 720px) {
+  /* Reserve space at end of page so content isn't hidden under the bar */
+  .pd, .fabric-pd { padding-bottom: 88px; }
+
+  .pdp-buy-bar {
+    display: flex;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 70;
+    padding: 10px 14px calc(10px + env(safe-area-inset-bottom, 0));
+    gap: 10px;
+    background: rgba(250, 247, 242, 0.96);
+    backdrop-filter: saturate(140%) blur(12px);
+    -webkit-backdrop-filter: saturate(140%) blur(12px);
+    border-top: 1px solid var(--paper-3);
+    box-shadow: 0 -8px 24px -16px rgba(10, 8, 6, 0.18);
+    align-items: center;
+  }
+  .pdp-buy-bar__price {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+  }
+  .pdp-buy-bar__price .lbl {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .pdp-buy-bar__price .amt {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 17px;
+    color: var(--ink);
+    letter-spacing: -0.005em;
+  }
+  .pdp-buy-bar__cta {
+    flex: 1 1 auto;
+    min-height: 48px;
+    padding: 0 14px;
+    border: 0;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .pdp-buy-bar__cta:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .pdp-buy-bar__cta:active { transform: translateY(1px); }
+}

@@ -1,14 +1,42 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
+import { useEffect, useRef } from "react";
 import { Product } from "@/lib/products";
 import { fmtINR } from "@/lib/format";
 import WishlistButton from "./WishlistButton";
 import QuickAddButton from "./QuickAddButton";
 
 export default function ProductCard({ p, priority = false }: { p: Product; priority?: boolean }) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  // Touch devices: cycle primary↔alt while card is in view (CSS keyframes
+  // do the crossfade; IntersectionObserver toggles the .is-cycling class so
+  // off-screen cards don't burn paint/battery). Desktop keeps hover-swap.
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (typeof window === "undefined") return;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const isTouch = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+    if (reduced || !isTouch) return;
+
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting && e.intersectionRatio > 0.4) {
+          el.classList.add("is-cycling");
+        } else {
+          el.classList.remove("is-cycling");
+        }
+      },
+      { threshold: [0, 0.4, 0.6, 1] }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   return (
-    <div className="pcard qa-host">
+    <div className="pcard qa-host" ref={ref}>
       <div className="plate">
         <Link href={`/products/${p.slug}`} aria-label={p.name}>
           <Image

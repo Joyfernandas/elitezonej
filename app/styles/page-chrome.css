@@ -759,35 +759,75 @@ footer.site.site--disturbia .foot-col-center .foot-logo-link {
   margin-bottom: var(--s-5);
   display: block;
 }
+/* Logo image — explicit desktop height so the lockup PNG (860×227 native)
+   renders at the intended 44px tall instead of overflowing the column. */
+footer.site.site--disturbia .foot-logo-img {
+  height: 44px;
+  width: auto;
+  display: block;
+}
 footer.site.site--disturbia .foot-col-center ul { align-items: center; }
 
+/* Follow column — tight editorial block. Override legacy
+   `justify-content: space-around` + `min-height: 100%` from disturbia.css
+   so the heading, social row, and rating badge stay packed at the top
+   instead of stretching to fill the grid track. */
 footer.site.site--disturbia .foot-col-social {
-  display: flex;
+  display: flex !important;
   flex-direction: column;
-  gap: var(--s-4);
-  align-items: flex-start;
+  align-items: center;
+  justify-content: flex-start !important;
+  gap: 18px;
+  min-height: 0 !important;
+  text-align: center;
 }
-footer.site.site--disturbia .foot-col-social h4 { margin-bottom: 12px; }
+footer.site.site--disturbia .foot-col-social h4 {
+  margin: 0 0 4px;
+  text-align: center;
+}
 footer.site.site--disturbia .social-row {
-  display: flex;
-  gap: 14px;
-  margin-bottom: 4px;
+  display: inline-flex !important;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
 }
 footer.site.site--disturbia .social-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   border: 1px solid var(--paper-3);
   color: var(--ink);
   background: transparent;
-  transition: background 200ms, color 200ms, border-color 200ms;
+  border-radius: 999px;
+  transition: background 220ms cubic-bezier(.22, 1, .36, 1),
+              color 220ms cubic-bezier(.22, 1, .36, 1),
+              border-color 220ms cubic-bezier(.22, 1, .36, 1),
+              transform 220ms cubic-bezier(.22, 1, .36, 1);
 }
 footer.site.site--disturbia .social-icon:hover {
   background: var(--ink);
   color: var(--paper);
   border-color: var(--ink);
+  transform: translateY(-1px);
+}
+/* Hairline divider between social icons and rating badge */
+footer.site.site--disturbia .foot-col-social .rating-badge {
+  position: relative;
+  margin-top: 6px;
+  padding-top: 18px !important;
+  align-items: center;
+}
+footer.site.site--disturbia .foot-col-social .rating-badge::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 28px;
+  height: 1px;
+  background: var(--paper-3);
 }
 
 footer.site.site--disturbia .foot-bottom {
@@ -863,6 +903,187 @@ footer.site.site--disturbia .foot-bottom {
   }
   .foot-bottom__copy { text-align: left; }
   .foot-bottom__pay { justify-content: flex-start; }
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   Foot accordion — desktop forces open + hides summary; mobile collapses
+   ───────────────────────────────────────────────────────────────────── */
+details.foot-col-acc { background: transparent; border: 0; }
+details.foot-col-acc > summary {
+  list-style: none;
+  cursor: pointer;
+}
+details.foot-col-acc > summary::-webkit-details-marker { display: none; }
+details.foot-col-acc > summary h4 { margin: 0; }
+.foot-col-acc__chev {
+  display: none;
+  transition: transform 280ms cubic-bezier(.22, 1, .36, 1);
+  color: var(--ink-3);
+}
+details.foot-col-acc[open] > summary .foot-col-acc__chev { transform: rotate(180deg); color: var(--accent); }
+
+/* Desktop / tablet: always-open layout, no summary chev needed.
+   UA stylesheet hides children of a closed <details>; force them visible
+   here so the column reads as a flat list at desktop viewports. */
+@media (min-width: 721px) {
+  details.foot-col-acc > summary { pointer-events: none; }
+  details.foot-col-acc > summary .foot-col-acc__chev { display: none; }
+  details.foot-col-acc > ul,
+  details.foot-col-acc > .social-row,
+  details.foot-col-acc > .rating-badge { display: flex !important; }
+  details.foot-col-acc > ul { flex-direction: column; gap: 10px; }
+  /* Center column: the logo IS the heading on desktop, so hide the
+     "Company" summary text and reveal the logo link as a regular block. */
+  details.foot-col-acc.foot-col-center > summary { display: none; }
+  details.foot-col-acc.foot-col-center > .foot-logo-link { display: block !important; }
+}
+
+/* Phone: real accordion — editorial mobile footer */
+@media (max-width: 720px) {
+  /* Tighter footer padding on phone */
+  footer.site.site--disturbia {
+    padding: 40px 16px 20px !important;
+  }
+  /* Stack columns with zero gap so accordion bars stack edge-to-edge,
+     creating a clean continuous rule line down the section. */
+  footer.site.site--disturbia .foot-grid {
+    gap: 0 !important;
+  }
+  /* Override legacy .foot-col flex/center alignment so accordion bars
+     run full bleed and align left like a proper mobile menu. */
+  footer.site.site--disturbia .foot-col,
+  footer.site.site--disturbia details.foot-col-acc {
+    align-items: stretch !important;
+    text-align: left !important;
+    width: 100%;
+  }
+
+  details.foot-col-acc > summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 2px;
+    min-height: 56px;
+    border-bottom: 1px solid var(--paper-3);
+    transition: padding 220ms cubic-bezier(.22, 1, .36, 1);
+  }
+  details.foot-col-acc[open] > summary {
+    border-bottom-color: var(--accent);
+  }
+  details.foot-col-acc > summary h4 {
+    font-family: var(--font-display) !important;
+    font-weight: 500 !important;
+    font-size: 19px !important;
+    letter-spacing: -0.005em !important;
+    color: var(--ink) !important;
+    text-align: left !important;
+    text-transform: none !important;
+    margin: 0 !important;
+  }
+  details.foot-col-acc[open] > summary h4 { color: var(--accent); }
+  .foot-col-acc__chev {
+    display: inline-flex;
+    align-items: center;
+    width: 22px;
+    height: 22px;
+    justify-content: center;
+  }
+
+  /* Content rows when open */
+  details.foot-col-acc > ul {
+    padding: 14px 2px 22px !important;
+    gap: 14px !important;
+    align-items: flex-start !important;
+  }
+  details.foot-col-acc > ul li {
+    text-align: left !important;
+    width: auto !important;
+  }
+  details.foot-col-acc > ul a {
+    font-size: 14px !important;
+    color: var(--ink-2) !important;
+  }
+
+  /* Social row (Follow) when open */
+  details.foot-col-acc > .social-row {
+    padding: 16px 2px 12px !important;
+    gap: 10px !important;
+    justify-content: flex-start !important;
+  }
+  /* Rating badge (Follow) — sits below social icons, left-aligned */
+  details.foot-col-acc > .rating-badge {
+    padding: 6px 2px 22px !important;
+    align-items: flex-start !important;
+  }
+  details.foot-col-acc > .rating-badge::before { display: none; }
+
+  /* Center column: logo when accordion open */
+  footer.site.site--disturbia .foot-logo-img {
+    height: 34px !important;
+    width: auto !important;
+  }
+  footer.site.site--disturbia details.foot-col-acc.foot-col-center > .foot-logo-link {
+    margin: 14px 0 4px;
+    padding: 0 2px;
+    align-self: flex-start;
+  }
+  footer.site.site--disturbia details.foot-col-acc.foot-col-center > .foot-logo-link img {
+    margin: 0;
+  }
+
+  /* Foot-bottom: stack centred, with subtle separators */
+  footer.site.site--disturbia .foot-bottom {
+    grid-template-columns: 1fr !important;
+    text-align: center !important;
+    gap: 14px !important;
+    margin-top: 28px !important;
+    padding: 18px 0 0 !important;
+  }
+  .foot-bottom__region {
+    justify-self: center;
+    align-self: center;
+  }
+  .foot-bottom__copy {
+    text-align: center !important;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+  }
+
+  /* Payment tiles: horizontal scroll rail (no wrap, peek the next tile) */
+  .foot-bottom__pay {
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x proximity;
+    padding: 4px 0 6px;
+    margin: 0 -16px; /* bleed to both viewport edges */
+    padding-left: 16px;
+    padding-right: 16px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    width: calc(100% + 32px);
+    justify-content: flex-start !important;
+    gap: 6px;
+  }
+  .foot-bottom__pay::-webkit-scrollbar { display: none; }
+  .foot-bottom__pay .pay-tile {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    height: 28px;
+    min-width: 44px;
+    font-size: 10px;
+  }
+
+  /* Newsletter band: tight on phone */
+  .newsletter-band h3 {
+    font-size: clamp(20px, 5.5vw, 26px) !important;
+    line-height: 1.2 !important;
+  }
+}
+
+/* Phone, but keep desktop summary readable on tablet (721-900) */
+@media (min-width: 721px) and (max-width: 900px) {
+  details.foot-col-acc > summary { padding: 0; min-height: 0; border-bottom: 0; }
 }
 
 /* ─────────────────────────────────────────────────────────────────────
